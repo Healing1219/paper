@@ -1,0 +1,83 @@
+This is BibTeX, Version 0.99d (TeX Live 2018/W32TeX)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: sample-sigconf.aux
+The style file: ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: sigproc.bib
+Name 1 in "W. Visser, J. Geldenhuys, and M. B. Dwyer" has a comma at the end for entry Visser2012Green
+while executing---line 3256 of file ACM-Reference-Format.bst
+Name 1 in "W. Visser, J. Geldenhuys, and M. B. Dwyer" has a comma at the end for entry Visser2012Green
+while executing---line 3256 of file ACM-Reference-Format.bst
+Name 1 in "W. Visser, J. Geldenhuys, and M. B. Dwyer" has a comma at the end for entry Visser2012Green
+while executing---line 3256 of file ACM-Reference-Format.bst
+Name 1 in "W. Visser, J. Geldenhuys, and M. B. Dwyer" has a comma at the end for entry Visser2012Green
+while executing---line 3302 of file ACM-Reference-Format.bst
+Name 1 in "W. Visser, J. Geldenhuys, and M. B. Dwyer" has a comma at the end for entry Visser2012Green
+while executing---line 3302 of file ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty publisher in Chakarov2013Martingales
+Warning--empty address in Chakarov2013Martingales
+Warning--empty publisher in Geldenhuys2012symbolic
+Warning--empty address in Geldenhuys2012symbolic
+Warning--empty publisher in Hermanns2013Probabilistic
+Warning--empty address in Hermanns2013Probabilistic
+Warning--empty publisher in Hurd2002A
+Warning--empty address in Hurd2002A
+Warning--page numbers missing in both pages and numpages fields in Hurd2002A
+Warning--no journal in Minka2012Compiler
+Warning--no number and no volume in Minka2012Compiler
+Warning--page numbers missing in both pages and numpages fields in Minka2012Compiler
+Warning--unrecognized DOI value [US8103598 B2]
+Warning--empty publisher in Sankaranarayanan2013Static
+Warning--empty address in Sankaranarayanan2013Static
+Name 1 in "W. Visser, J. Geldenhuys, and M. B. Dwyer" has a comma at the end for entry Visser2012Green
+while executing---line 3400 of file ACM-Reference-Format.bst
+Name 1 in "W. Visser, J. Geldenhuys, and M. B. Dwyer" has a comma at the end for entry Visser2012Green
+while executing---line 3400 of file ACM-Reference-Format.bst
+Name 1 in "W. Visser, J. Geldenhuys, and M. B. Dwyer" has a comma at the end for entry Visser2012Green
+while executing---line 3400 of file ACM-Reference-Format.bst
+Warning--empty publisher in Visser2012Green
+Warning--empty address in Visser2012Green
+You've used 15 entries,
+            5551 wiz_defined-function locations,
+            1393 strings with 17822 characters,
+and the built_in function-call counts, 16018 in all, are:
+= -- 2046
+> -- 592
+< -- 0
++ -- 180
+- -- 208
+* -- 1131
+:= -- 1703
+add.period$ -- 74
+call.type$ -- 15
+change.case$ -- 99
+chr.to.int$ -- 15
+cite$ -- 31
+duplicate$ -- 1338
+empty$ -- 964
+format.name$ -- 256
+if$ -- 3947
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 66
+newline$ -- 160
+num.names$ -- 120
+pop$ -- 510
+preamble$ -- 1
+purify$ -- 174
+quote$ -- 0
+skip$ -- 403
+stack$ -- 0
+substring$ -- 1203
+swap$ -- 140
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 210
+warning$ -- 17
+while$ -- 118
+width$ -- 0
+write$ -- 296
+(There were 8 error messages)

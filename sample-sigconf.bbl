@@ -1,0 +1,218 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{00}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{{\tt DOI:}\penalty0{#1}\ }
+  \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       #1{#1}          \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[\protect\citeauthoryear{Arora, Lund, Motwani, Sudan, and
+  Szegedy}{Arora et~al\mbox{.}}{1998}]%
+        {Arora1998Proof}
+\bibfield{author}{\bibinfo{person}{Sanjeev Arora}, \bibinfo{person}{Carsten
+  Lund}, \bibinfo{person}{Rajeev Motwani}, \bibinfo{person}{Madhu Sudan}, {and}
+  \bibinfo{person}{Mario Szegedy}.} \bibinfo{year}{1998}\natexlab{}.
+\newblock \showarticletitle{Proof verification and the hardness of
+  approximation problems}.
+\newblock \bibinfo{journal}{{\em Journal of the Acm\/}} \bibinfo{volume}{45},
+  \bibinfo{number}{3} (\bibinfo{year}{1998}), \bibinfo{pages}{501--555}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Chakarov and Sankaranarayanan}{Chakarov and
+  Sankaranarayanan}{2013}]%
+        {Chakarov2013Martingales}
+\bibfield{author}{\bibinfo{person}{Aleksandar Chakarov} {and}
+  \bibinfo{person}{Sriram Sankaranarayanan}.} \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{Probabilistic Program Analysis with Martingales}.
+  In \bibinfo{booktitle}{{\em Sharygina, N., Veith, H. (eds.) CAV 2013. LNCS,
+  vol. 8044}}. Springer, Berlin, Heidelberg, \bibinfo{pages}{511--526}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Chatterjee, Fu, and Goharshady}{Chatterjee
+  et~al\mbox{.}}{2016}]%
+        {kris2016termination}
+\bibfield{author}{\bibinfo{person}{Krishnendu Chatterjee},
+  \bibinfo{person}{Hongfei Fu}, {and} \bibinfo{person}{Amir~Kafshdar
+  Goharshady}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Termination Analysis of Probabilistic Programs
+  through Positivstellensatz's}.
+\newblock \bibinfo{journal}{{\em Computer Aided Verification\/}}
+  \bibinfo{volume}{9779} (\bibinfo{date}{July} \bibinfo{year}{2016}),
+  \bibinfo{pages}{489--501}.
+\newblock
+\showDOI{%
+\url{http://dx.doi.org/10.1007/978-3-319-41528-4_1}}
+
+
+\bibitem[\protect\citeauthoryear{Codish and Taboch}{Codish and Taboch}{1999}]%
+        {Codish1999Semantic}
+\bibfield{author}{\bibinfo{person}{Michael Codish} {and}
+  \bibinfo{person}{Cohavit Taboch}.} \bibinfo{year}{1999}\natexlab{}.
+\newblock \showarticletitle{Semantic basis for the termination analysis of
+  logic programs}.
+\newblock \bibinfo{journal}{{\em Journal of Logic Programming\/}}
+  \bibinfo{volume}{41}, \bibinfo{number}{1} (\bibinfo{year}{1999}),
+  \bibinfo{pages}{103--123}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Dwork and Roth}{Dwork and Roth}{2014}]%
+        {Dwork2014Differential}
+\bibfield{author}{\bibinfo{person}{Cynthia Dwork} {and} \bibinfo{person}{Aaron
+  Roth}.} \bibinfo{year}{2014}\natexlab{}.
+\newblock \showarticletitle{The Algorithmic Foundations of Differential
+  Privacy}.
+\newblock \bibinfo{journal}{{\em Foundations and Trends in Databases\/}}
+  \bibinfo{volume}{9} (\bibinfo{date}{January} \bibinfo{year}{2014}),
+  \bibinfo{pages}{211--407}.
+\newblock
+\showDOI{%
+\url{http://dx.doi.org/10.1561/0400000042}}
+
+
+\bibitem[\protect\citeauthoryear{Geldenhuys, Dwyer, and Visser}{Geldenhuys
+  et~al\mbox{.}}{2012}]%
+        {Geldenhuys2012symbolic}
+\bibfield{author}{\bibinfo{person}{J. Geldenhuys}, \bibinfo{person}{M.~B.
+  Dwyer}, {and} \bibinfo{person}{W. Visser}.} \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{Probabilistic symbolic execution}. In
+  \bibinfo{booktitle}{{\em ISSTA}}. ACM, \bibinfo{pages}{166--167}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{He, Ma, and Yuan}{He et~al\mbox{.}}{2020}]%
+        {Bingsheng2020}
+\bibfield{author}{\bibinfo{person}{Bingsheng He}, \bibinfo{person}{Feng Ma},
+  {and} \bibinfo{person}{Xiaoming Yuan}.} \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{Optimally linearizing the alternating direction
+  method of multipliers for convex programming}.
+\newblock \bibinfo{journal}{{\em Computational Optimization and
+  Applications\/}}  \bibinfo{volume}{75} (\bibinfo{date}{March}
+  \bibinfo{year}{2020}), \bibinfo{pages}{361--388}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Hermanns, Holger, Fioriti, Luis, Maria, and
+  Ferrer}{Hermanns et~al\mbox{.}}{2015}]%
+        {Hermanns2013Probabilistic}
+\bibfield{author}{\bibinfo{person}{Hermanns}, \bibinfo{person}{Holger},
+  \bibinfo{person}{Fioriti}, \bibinfo{person}{Luis}, \bibinfo{person}{Maria},
+  {and} \bibinfo{person}{Ferrer}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Probabilistic termination: soundness, completeness,
+  and compositionality}. In \bibinfo{booktitle}{{\em POPL}}. ACM,
+  \bibinfo{pages}{489--501}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Hoeffding}{Hoeffding}{1963}]%
+        {Hoeffding1963}
+\bibfield{author}{\bibinfo{person}{W. Hoeffding}.}
+  \bibinfo{year}{1963}\natexlab{}.
+\newblock \showarticletitle{Probability inequalities for sums of bounded random
+  variables}.
+\newblock \bibinfo{journal}{{\it J. Amer. Statist. Assoc.}}
+  \bibinfo{volume}{58}, \bibinfo{number}{31} (\bibinfo{year}{1963}),
+  \bibinfo{pages}{13--30}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Hurd}{Hurd}{2002}]%
+        {Hurd2002A}
+\bibfield{author}{\bibinfo{person}{Joe Hurd}.} \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{A Formal Approach to Probabilistic Termination}. In
+  \bibinfo{booktitle}{{\em Theorem Proving in Higher Order Logics,
+  International Conference, Tphols, Hampton, Va, Usa, August}}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{K, H, and P}{K et~al\mbox{.}}{2015}]%
+        {cha2015algorithmic}
+\bibfield{author}{\bibinfo{person}{Chatterjee K}, \bibinfo{person}{Fu H}, {and}
+  \bibinfo{person}{Novotny P}.} \bibinfo{year}{2015}\natexlab{}.
+\newblock \showarticletitle{Algorithmic Analysis of Qualitative and
+  Quantitative Termination Problems for Affine Probabilistic Programs}.
+\newblock \bibinfo{journal}{{\em ACM Sigplan Notices\/}} \bibinfo{volume}{51},
+  \bibinfo{number}{1} (\bibinfo{date}{June} \bibinfo{year}{2015}),
+  \bibinfo{pages}{327--342}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Kozen}{Kozen}{1981}]%
+        {Kozen1981Semantics}
+\bibfield{author}{\bibinfo{person}{Dexter Kozen}.}
+  \bibinfo{year}{1981}\natexlab{}.
+\newblock \showarticletitle{Semantics of probabilistic programs}.
+\newblock \bibinfo{journal}{{\it J. Comput. System Sci.}} \bibinfo{volume}{22},
+  \bibinfo{number}{3} (\bibinfo{year}{1981}), \bibinfo{pages}{328--350}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{Minka and Winn}{Minka and Winn}{2012}]%
+        {Minka2012Compiler}
+\bibfield{author}{\bibinfo{person}{Thomas Minka} {and} \bibinfo{person}{John
+  Winn}.} \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{Compiler for probabilistic programs}.
+\newblock  (\bibinfo{date}{January} \bibinfo{year}{2012}).
+\newblock
+\showDOI{%
+\url{http://dx.doi.org/US8103598 B2}}
+
+
+\bibitem[\protect\citeauthoryear{Sankaranarayanan, Chakarov, and
+  Gulwani}{Sankaranarayanan et~al\mbox{.}}{2013}]%
+        {Sankaranarayanan2013Static}
+\bibfield{author}{\bibinfo{person}{Sriram Sankaranarayanan},
+  \bibinfo{person}{Aleksandar Chakarov}, {and} \bibinfo{person}{Sumit
+  Gulwani}.} \bibinfo{year}{2013}\natexlab{}.
+\newblock \showarticletitle{Static Analysis for Probabilistic Programs:
+  Inferring Whole Program Properties from Finitely Many Paths}. In
+  \bibinfo{booktitle}{{\em PLDI}}. \bibinfo{pages}{447--458}.
+\newblock
+
+
+\bibitem[\protect\citeauthoryear{W.~Visser and Dwyer}{W.~Visser and
+  Dwyer}{2012}]%
+        {Visser2012Green}
+\bibfield{author}{\bibinfo{person}{J.~Geldenhuys W.~Visser} {and}
+  \bibinfo{person}{M.~B. Dwyer}.} \bibinfo{year}{2012}\natexlab{}.
+\newblock \showarticletitle{Green: reducing, reusing and recycling constraints
+  in program analysis}. In \bibinfo{booktitle}{{\em SIGSOFT FSE}}. ACM,
+  \bibinfo{pages}{1--11}.
+\newblock
+
+
+\end{thebibliography}
