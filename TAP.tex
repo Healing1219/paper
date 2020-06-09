@@ -283,14 +283,7 @@ The second step is to estimate the probability of a given assertion $\varphi$. F
 
 \paragraph{Path probability} Each path has a series of variables and constraints. We need to estimate the probability of satisfying all constraints given the probability distributions on variables. Each variable can be regarded as a dimension of convex polyhedron. The calculation of path probability can be reduced to a polyhedron solving problem~\cite{Visser2012Green}. However, the solution of a convex polyhedron by linear programming is too rough. Therefore, we first decompose the convex polyhedron into several non-intersecting convex bodies~\cite{Bingsheng2020} and then add up the calculation results. As described in Algorithm~\ref{mcBoundProbability}, the function $isDecomposable()$  is used to determine whether it can be decomposed. If true, it will be decomposed along the selected dimension. When the boundary box is found, the upper and lower bounds will be calculated by the function $computeBoundingProbability()$. Based on the idea of importance sampling, the function $selectBranchDimension()$ selects a dimension which is unbounded or half bound or else it selects the maximum width dimension. The function $branchAndBound()$ performs the decomposition according to the selected dimension. Here, $nBranch$ is the number of segmentation, with the default value $2$. In addition, to avoid infinite decomposition, we set $maxDepth$ as the maximum recurrence depth, with the default value $12$ in TAP. Each path is calculated by the Algorithm \ref{mcBoundProbability}. Since there is no intersection of each path, the path probability is equal to the sum of each paths' probability. Let us assume that the assertion probability is $[p_1,p_2]$. It indicates that the maximum $1-p_1$ path has not been explored. This will be used to calculate the upper bound of the assertion probability.
 
-
-\paragraph{Assertion probability} The method of computing an assertion probability is similar to that of computing a path probability. The only difference is the need to add assertion $\varphi$ to the conditional constraints. Let us assume that the assertion probability is $[q_1,q_2]$. Since the path set $S$ may not cover all the paths in the program, we need to consider the probability of unexplored paths and add the probability beyond the path set $S$ to the upper bound of the assertion probability. Then the probability interval of the given assertion is $[q_1,q_2+(1-p_1)]$.
-
-
-\section{Experimental Results}
-In this section, we present some experimental results of analyzing probabilistic programs using TAP. More details can be found at GitHub.
-
-\begin{table*}
+\begin{table*}[htb]
 	\caption{Experimental results: termination analysis}  
 	\label{TerminationResult} 
 	\begin{center}  
@@ -309,12 +302,16 @@ In this section, we present some experimental results of analyzing probabilistic
 	\end{center}  
 \end{table*}
 
+\paragraph{Assertion probability} The method of computing an assertion probability is similar to that of computing a path probability. The only difference is the need to add assertion $\varphi$ to the conditional constraints. Let us assume that the assertion probability is $[q_1,q_2]$. Since the path set $S$ may not cover all the paths in the program, we need to consider the probability of unexplored paths and add the probability beyond the path set $S$ to the upper bound of the assertion probability. Then the probability interval of the given assertion is $[q_1,q_2+(1-p_1)]$.
+
+\section{Experimental Results}
+In this section, we present some experimental results of analyzing probabilistic programs using TAP. More details can be found at GitHub.
+
+
 We have written some simple but classical probabilistic programs with while' loops. In Table~\ref{TerminationResult}, we display the experimental results about termination analysis, where $x_0$ means the initial value of each variable, $g(\ell_0,x_0)$ is the polynomial ranking supermartingale about the starting location, $UB(P)$ is the upper bound of expected termination time and $N$ is the bound that the probability of termination after $N$ steps shows an exponential decrement (we set the exponent to  $1.5 \cdot 10^{-5}$).
 
-
-
-\begin{table*} 
-	\caption{Experimental results: estimating the probability bounds of assertions}
+\begin{table}[htb]
+	\caption{Experimental results: estimating the probability interval of assertions}
 	\label{AssertionsResults} 
 	\begin{tabular}{c |c |c |c }
 		\hline  
@@ -342,21 +339,21 @@ We have written some simple but classical probabilistic programs with while' loo
 		& $f -f_1\geq0.1$ & 0.9252 & [0.351632, 0.426397] \\ \cline{2-4}
 		& $f_1 -f\geq0.1$ & 0.9261 & [0.387275, 0.461157]  \\ \hline
 	\end{tabular}  
-\end{table*}
+\end{table}
 
-Table~\ref{AssertionsResults} shows the experimental results about estimating the probability bounds of assertions. In the table, an assertion is a boolean expression that can contain addition and subtraction operations and  also supports the use of the logical operator conjunction; $c$ is the lower bound of path coverage; the column headed by Bounds gives the upper and lower bounds of the given assertion. %Due to layout restrictions, some values are not presented in the table, such as the total number of execution paths and unique paths.
+Table~\ref{AssertionsResults} shows the experimental results about estimating the probability interval of assertions. In the table, an assertion is a boolean expression that can contain addition and subtraction operations and  also supports the use of the logical operator conjunction; $c$ is the lower bound of path coverage; the column headed by Bounds gives the upper and lower bounds of the given assertion. %Due to layout restrictions, some values are not presented in the table, such as the total number of execution paths and unique paths.
 
 
 \section{Conclusions and Future Work}
 Uncertainty exists in many software systems, including data analysis, stochastic algorithms and Monte Carlo simulation. We have designed TAP  to provide convenience and support for analyzing probabilistic programs.
-TAP is helpful to perform qualitative and quantitative analysis on the termination of probabilistic programs. It can also collect path sets with high confidence coverage and compute  probability intervals for assertions to hold in probabilistic programs.
+TAP is helpful to perform qualitative and quantitative analysis on the termination of probabilistic programs. It can also collect path sets with high confidence coverage and compute  probability interval for assertions to hold in probabilistic programs.
 
 
 However, we have only solved some aspects of the complex problem of probabilistic program analysis and verification. There are still many ways to improve the tool.
 \begin{enumerate}
-	\item Currently, TAP only deals with linear programs. That is, it cannot handle variable multiplication, division and exponents, etc., regardless of the termination analysis or the estimation of assertion probability intervals.
+	\item Currently, TAP only deals with linear programs. That is, it cannot handle variable multiplication, division and exponents, etc., regardless of the termination analysis or the estimation of assertion probability interval.
 	\item Non-deterministic probabilistic programs  are also not supported. TAP requires the the behavior of the input program to be fully probabilistic, and there is no non-deterministic transitions. 
-	\item In the future, we hope to find a better way to compute more accurate probability intervals under the premise of ensuring high efficiency. 
+	\item In the future, we hope to find a better way to compute more accurate probability interval under the premise of ensuring high efficiency. 
 \end{enumerate}
 
 
