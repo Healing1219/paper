@@ -3,6 +3,9 @@
 %
 \usepackage{booktabs,algorithm,algorithmic,multirow,amsmath,xcolor,bm,makecell,balance} % For formal tables
 
+
+
+
 \renewcommand{\algorithmicrequire}{\textbf{Input:}} 
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
@@ -31,10 +34,10 @@
 
 
 \begin{document}
-\title{TAP: a Tool for Analyzing Termination and Assertions for Probabilistic Programs}
+\title{TAP}
 %\titlenote{Produces the permission block, and
 %  copyright information}
-%\subtitle{Extended Abstract}
+\subtitle{a Tool for Analyzing Termination and Assertions for Probabilistic Programs}
 %\subtitlenote{The full version of the author's guide is available as
 %  \texttt{acmart.pdf} document}
 
@@ -76,9 +79,9 @@
 
 
 \begin{abstract}
-  Probabilistic programs combine probabilistic reasoning models with Turing complete programming languages, unify formal descriptions of calculation and uncertain knowledge, and can effectively deal with complex relational models and uncertain problems. This paper presents TAP, a  tool  for analyzing termination and assertions for probabilistic programs. On one hand, it can help to analyze the termination property of  probabilistic programs both qualitatively and quantitatively. It can check whether a probabilistic program terminates with probability $1$,  estimate the expected termination time, and calculate the number of steps after which the termination probability of the given probabilistic program decreases exponentially.  On the other hand, it can estimate the correct probability interval for a given assertion to hold, which helps to analyze the influence of uncertainty of variables on the results of probabilistic programs.
+  Probabilistic programs combine probabilistic reasoning models with Turing complete programming languages, unify formal descriptions of calculation and uncertain knowledge, and can effectively deal with complex relational models and uncertain problems. This paper presents TAP, a tool for analyzing termination and assertions for affine probabilistic programs. On one hand, it can help to analyze the termination property of affine probabilistic programs both qualitatively and quantitatively. It can check whether a probabilistic program terminates with probability $1$, estimate the upper bound of expected termination time, and calculate the number of steps after which the termination probability of the given probabilistic program decreases exponentially.  On the other hand, it can estimate the correct probability interval for a given assertion to hold, which helps to analyze the influence of uncertainty of variables on the results of probabilistic programs.
   %They can be effectively checked in polynomial time. TAP supports  more than ten kinds of built-in probability distributions. 
-The effectiveness of TAP is demonstrated through various probabilsitic programs.
+  The effectiveness of TAP is demonstrated through various affine probabilistic programs.
 \end{abstract}
 
 \leaveout{
@@ -118,25 +121,24 @@ The effectiveness of TAP is demonstrated through various probabilsitic programs.
 % We no longer use \terms command
 %\terms{Theory}
 
-\keywords{Probabilistic Programming, Program Verification, Probability Intervals, Termination}
+\keywords{Probabilistic Programming, Program Verification, Termination, Ranking Supermartingale}
 
 
 \maketitle
 
 
 \section{Introduction}
-There are a large number of uncertainty problems in the real world, which requires us to use prerequisite knowledge and deductive reasoning to predict the results, that is to say, to make decisions on nondeterministic problems through probability reasoning. Therefore, probabilistic programs are put forward for that purpose. Probabilistic programs are a kind of logic programs with probabilistic facts. They make probabilistic reasoning models easier to build and can estimate the possibilities of for  certain events to occur.
-Probabilistic programs have a wide range of applications in various fields such as business, military, scientific research and daily life. Probability is becoming more and more important in actual calculations, such as risk analysis, medical decision-making, differential privacy mechanisms~\cite{Dwork2014Differential}, etc. The analysis of probabilistic programs has also received widespread attention in academia and industry. %Therefore, we need to learn the impact of probabilitisic variables on the program results, analyze and verify the properties of probabilistic grams, so as to ensure that the final results of the program have good reliability and stability.
+There are a large number of uncertainty problems in the real world, which requires us to use prerequisite knowledge and deductive reasoning to predict the results, that is to say, to make decisions on nondeterministic problems through probability reasoning. Therefore, probabilistic programs are put forward for that purpose. Probabilistic programs are a kind of logic programs with probabilistic facts. They make probabilistic reasoning models easier to build and can estimate the possibilities of for certain events to occur.
+Probabilistic programs have a wide range of applications in various fields such as business, military, scientific research and daily life. Probability is becoming more and more important in actual calculations, such as risk analysis, medical decision-making, differential privacy mechanisms, etc. The analysis of probabilistic programs has also received widespread attention in academia and industry. %Therefore, we need to learn the impact of probabilitisic variables on the program results, analyze and verify the properties of probabilistic grams, so as to ensure that the final results of the program have good reliability and stability.
 
-In the current work we present presents TAP, a verification tool  for analyzing Termination and Assertions for Probabilistic programs. It can automatically analyze whether a probabilistic program conforms to a specification.
+In the current work we present presents TAP, a verification tool for analyzing Termination and Assertions for affine Probabilistic programs. It can automatically analyze whether an affine  probabilistic program conforms to a specification.
 %(As shown in Figure \ref{syntaxy}).
-It mainly includes two parts: one is to analyze the termination property of a given probabilistic program qualitatively and quantitatively; the other is to estimate the correct probability interval for a given assertion to hold.
+It mainly includes two parts: one is to analyze the termination property of a given affine probabilistic program qualitatively and quantitatively; the other is to estimate the correct probability interval for a given assertion to hold.
 More specifically, TAP provides the following functionalities:
 \begin{enumerate}
-\item Defining and parsing probabilistic programs. More than ten kinds of probability distributions are built in, which is convenient to be called to build probabilistic models.
-  \item Reducing the termination analysis of a given program to a linear programming problem. We also consider the concentration results under the premise that the program is terminating.
-	\item Reducing the estimation of a given assertion to a polyhedron solving problem. Note that we support probabilistic programs with infinitely many states.
-	
+	\item Defining and parsing probabilistic programs. More than ten kinds of probability distributions are built in, which is convenient to be called to build probabilistic models.
+    \item Reducing the termination analysis of a given program to a linear programming problem. We also consider the concentration results under the premise that the program is terminating.
+	\item Reducing the estimation of a given assertion to a polyhedron solving problem. Note that we support probabilistic programs with infinitely many states.	
 \end{enumerate}
 The tool and the experimental data given in this paper are all available in the repository \url{https://github.com/}.
 
@@ -170,8 +172,35 @@ The tool and the experimental data given in this paper are all available in the 
 	\end{tabular}
 	\caption{Syntax specification of a probabilistic language}	\label{syntax}
 \end{figure}
-In order to analyze and verify probabilistic programs, we first need a probabilistic language sufficiently expressive and easy to understand. We follow \cite{Minka2012Compiler} to define a probabilistic language, whose syntax specification is shown in Figure~\ref{syntax}. The statements in the probabilistic language are similar to those in classic imperative languages, mainly composed of three types of statements: assignment, condition-branch (if-else) and loop statements (while). The main difference is that we now have a collection of random value generators as listed in Table~\ref{distribution}, which can be used to simulate different probability distributions. Variables are classified into two types: program variables and sampling variables. Program variables include integer, real, and boolean variables. Boolean variables are mainly used for condition  and loop statements. Sampling variables are assigned with dynamically generated values when the program is running, which is subject to a continuous  or discrete probability distribution.
+In order to analyze and verify probabilistic programs, we first need a probabilistic language sufficiently expressive and easy to understand. We follow \cite{Sankaranarayanan2013Static} to define a probabilistic language, whose syntax specification is shown in Figure~\ref{syntax}. The statements in the probabilistic language are similar to those in classic imperative languages, mainly composed of three types of statements: assignment, condition-branch (if-else) and loop statements (while). The main difference is that we now have a collection of random value generators(discrete distribution, Binomial distribution, Poisson distribution, Integer Uniform distribution, Real Uniform distribution, Exponential distribution, Normal distribution, Gamma distribution, Beta distribution, Laplace distribution, Geometric distribution and T distribution), which can be used to simulate different probability distributions. Variables are classified into two types: program variables and sampling variables. Program variables include integer, real, and boolean variables. Boolean variables are mainly used for condition and loop statements. Sampling variables are assigned with dynamically generated values when the program is running, which is subject to a continuous or discrete probability distribution.
 
+
+We use control flow graphs (CFGs) to express the semantics of probabilistic programs. Formally, a CFG is a tuple in the form $(L,X,R,\mapsto,\bot)$, where:
+
+\begin{itemize}
+	\item $L$ is a finite set of labels $L=\{\ell_0,\ell_1,\dots,\ell_n\}$ used to represent control locations. Each statement in a program has a unique label. For example, $\ell_0$ usually indicates the starting location.
+	%, $\ell$$_n$ indicates the last location.
+	
+	\item $X=\{x_0,\dots,x_n\}$ is a set of program variables and $R=\{r_1,\dots,r_m\}$ is a set of sampling variables.
+	
+	\item $\mapsto$ is a transition relation. Its element is in the form $(\ell,\alpha,\ell')$, representing one step of transition from control location $\ell$ to $\ell'$, by an update function $\alpha$: $\mathbb{R}^{|X\cup R|}\to \mathbb{R}^{|X|}$.
+	
+	\item $\bot$ is a sign of the exit of the program.
+\end{itemize}
+
+
+The following uses an example to illustrate the probabilistic programs and control flow graphs.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{img/example}
+	\caption{A probabilistic program with its CFG}
+	\label{example1}
+\end{figure}
+
+\paragraph{Example 1} Consider the program depicted in the left part of Fig.\ref{example1}, where h and t is the program variables, p is a smapling variable. 'Binomial(1,0.5)' is binomial distribution, which means the probability of 0.5 is taken as 1, else 0. 'unifInt(0,1)' is integer uniform distribution, which means the integers between 0 and 10 are taken with equal probability. The numbers 1-6 on the left are the program control location, where 1 is the starting location and 6 is the terminal location. Its CFG is given in the right part of the figure. The probabilistic programs simulate the scene of the tortoise hare race. The tortoise's initial position is t and the hare's initial position is h, until the hare passes the tortoise and the program is terminated. The tortoise is always moving at the speed of 1. The hare is moving with probability 0.5, the moving speed is a random number between 0 and 10.
+
+\iffalse
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 \begin{table}[htb]
 	\caption{Specification of the inbuilt random value generators}
@@ -202,22 +231,11 @@ In order to analyze and verify probabilistic programs, we first need a probabili
 		\bottomrule  
 	\end{tabular}
 \end{table}
+\fi
 
-We use control flow graphs (CFGs) to express the semantics of probabilistic programs~\cite{Kozen1981Semantics}. Formally, a CFG is a tuple in the form $(L,X,R,\mapsto,\bot)$, where:
-
-\begin{itemize}
-\item $L$ is a finite set of labels $L=\{\ell_0,\ell_1,\dots,\ell_n\}$ used to represent control locations. Each statement in a program has a unique label. For example, $\ell_0$ usually indicates the starting location.
-  %, $\ell$$_n$ indicates the last location.
-
-\item $X=\{x_0,\dots,x_n\}$ is a set of program variables and $R=\{r_1,\dots,r_m\}$ is a set of sampling variables.
-
-\item $\mapsto$ is a transition relation. Its element is in the form $(\ell,\alpha,\ell')$, representing one step of transition from control location $\ell$ to $\ell'$, by performing action $\alpha$.
-
-\item $\bot$ is a sign of the exit of the program.
-\end{itemize}
 
 \section{Termination Analysis}
-Termination analysis~\cite{Codish1999Semantic} is an important part of program verification. Ensuring termination is a necessary condition for many properties of programs such as total correctness. A powerful technique for proving probabilistic termination is to synthesize ranking supermartingales~\cite{Chakarov2013Martingales,Hermanns2013Probabilistic,cha2015algorithmic,kris2016termination}. TAP implements Algorithm~\ref{TA} to analyze probabilistic termination qualitatively and quantitatively. 
+Termination analysis is an important part of program verification.If the loop program is terminated for all initial values that can enter the loop, the program is said to be terminated.  Ensuring termination is a necessary condition for many properties of programs such as total correctness. Generally speaking, the termination of a program is undecideable~\cite{Turing1936On}, but for some subclass programs,its termination can be verified. In this paper, we prove the termination of the affine probabilistic programs by synthesizing ranking supermartingales~\cite{Chakarov2013Martingales}. TAP implements Algorithm\ref{TA}~\cite{cha2015algorithmic,kris2016termination}to analyze probabilistic termination qualitatively and quantitatively. 
 \begin{algorithm}[htb]  
 	\caption{Termination Analysis.}  
 	\label{TA}  
@@ -226,62 +244,65 @@ Termination analysis~\cite{Codish1999Semantic} is an important part of program v
 		Program P; 
 		\ENSURE  
 		Judge whether the program is terminating, isT;\\
-		The probability to terminate afer N steps decreases exponentially, N;
-		\STATE Set quadratic template $g(\ell,\boldsymbol{x})$. Each location has the common template with unique coefficient. If $\ell_{\bot}$, the template g=K.
-		\STATE Traverse the programs parse tree and collect the invariant I[] for each location.
-		\STATE Calculate the pre-expectation for each location.\\
+		The probability to terminate afer N steps decreases exponentially, N.
+		\STATE Set template $g(\ell,\boldsymbol{x})$ with a natural number as the maximal degree. Each location has the common template with unique coefficient. If $\ell_{\bot}$, the template $g(\ell,\boldsymbol{x})$=K.
+		\STATE Traverse the programs parse tree \\
+		2.1: Collect the invariant I[] for each location.\\
+		2.2: Calculate the pre-expectation for each location.\\
 		\quad \quad case "assignment statement" :\\
-		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})= \mathbb{E}(g(\ell',f(\boldsymbol{x},\boldsymbol{r})),\boldsymbol{x})$.\\
+		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})= \mathbb{E}(g(\ell',\alpha,\boldsymbol{x})$.\\
 		\quad \quad case "condition(if-else) or loop(while) statement" :\\
 		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})=g(\ell',\boldsymbol{x})$.\\
 		\quad \quad case "terminal statement" :\\
-		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})=g(\ell,\boldsymbol{x}).$
-		\STATE By the concept of half-space, $H=g(\ell,\boldsymbol{x})-pre(\ell,\boldsymbol{x})-\epsilon$
-		\STATE By Handelman's Theorem, $H'=\sum\limits_{i=1}^{d} a_i\cdot I_i$, where $\mu=\{\prod\limits_{i=1}^{2}\nu\}$ and $a_i$ is a non-negative real number.
-		\STATE Pattern extraction. The coefficient of $H$ corresponds to that of $H'$, which is converted into a linear programming problem. If solvable, the program P can be terminating, otherwise return.
+		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})=g(\ell,\boldsymbol{x})=K$.
+		\STATE By the concept of half-space, $H=g(\ell,\boldsymbol{x})-pre(\ell,\boldsymbol{x})-\epsilon$, where $\epsilon >0$ and $K \leq -\epsilon$
+		\STATE Pattern extraction. By Handelman's Theorem~\cite{Handelman1988Representing}, $H'=\sum\limits_{i=1}^{d} a_i\cdot \mu_i$, where $\mu_i \in \mu$, $\mu=\{\prod\limits_{i=1}^{n} I_i | n\in\mathbb{N}_0 and I_1,\dots,I_n \in I\}$ and $a_i$ is a non-negative real number.
+		\STATE Solve linear programming. H and H' are corrsponding coefficient relations. If solvable, the program P can be terminating, otherwise return.
+		\STATE Calculate the upper bound of expected termination time according to $EP(P)\leq UB(P):=\frac{g(\ell_0,x_0)-K}{\epsilon}$
 		\STATE Calculate the difference-bounded $[a,b]$ with $(a\leq g(\ell',\boldsymbol{x})-g(\ell,f(\boldsymbol{x},\boldsymbol{r}))\leq b)$
 		\STATE Obtain N, according to $\mathbb{P}(\bm{T_p} > N) \leq e^{-\frac{2(\epsilon(N-1)-g(\ell_0,x_0))^2}{(N-1)(b-a)^2}}$
 	\end{algorithmic}  
 \end{algorithm}  
 
 
-\paragraph{Qualitative analysis} It mainly analyzes whether the probabilistic programs will terminate with probability $1$ (almost sure termination)~\cite{Hurd2002A}. The specific idea is to calculate the supermartingale of each location and the value of location $\ell$' does not exceed that of location $\ell$. Refer to Algorithm \ref{TA} steps 1 to 6. Supermartingales are represented by the template $g$ with a natural number as its maximal degree. For the sake of simplicity, our tool takes $2$, that is, the template $g$ is a quadratic equation. We calculate the pre-expectation for each location according to the formulas of step $3$, where $\ell$' is the next location of $\ell$ and $f$ is the transition relation from location $\ell$ to $\ell$'. Since the pre-expectations belong to a convex set. The definition of half-space $\{x|\textbf{a}^T\textbf{x}\leq b\}$ can be transformed into $\{x|(\textbf{c}^\ell)^T\textbf{x} \leq d^\ell-\epsilon\}$ and $c^\ell$ (resp. $d^\ell$ is a vector (resp. scalar) linear expression related to $pre(\ell,\boldsymbol{x})$. we will apply it to the pre-expectation, it is equivalent to $pre(\ell,\boldsymbol{x}) \leq g(\ell,\boldsymbol{x})-\epsilon$, and $\epsilon$ takes 1. Finally, according to Handelman's theorem, we can transform this problem into a linear programming problem.
+\paragraph{Qualitative analysis} It mainly analyzes whether the probabilistic programs will terminate with probability $1$ (almost sure termination). The specific idea is to calculate the martingale of each location and the value of location $\ell$' minus the value of location $\ell$ is $\epsilon$, where $\epsilon$ is greater than $0$. Refer to Algorithm \ref{TA} steps 1 to 5. The polynomial ranking supermartingale(RSM) is a collection of functions at each label, represented by the template $g(\ell,\cdot)$. Each function is non-negative at non-terminal program position. The invariants and pre-expectation are calculated by traversing the program parse tree. pre-expectation~\cite{Chakarov2013Martingales} is about the expression over the variables across a transition $\mapsto$. Then, through steps 3 and 4, H and H' can be known. According to Handelman's theorem, we know that the coefficients of H and H' correspond. So that it can be transformed into linear programming problems.  For the sake of simplicity, in TAP, we take the maximal degree of the template as $2$, that is, the template $g(\ell,\cdot)$ is a quadratic equation. In addition, $\epsilon$ is taken as $1$ and K as $-1$ for our tool TAP. Below we show the result of Example 1, as shown in Table \ref{RSM}. 
 
+\begin{table}[htb]
+	\centering
+	\caption{The RSM-map for Example 1}
+	\label{RSM}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		Lable& Invariant & The RSM-map g \\ \hline
+		1 & $h\leq t+9$ &$3\cdot t-3\cdot h+27$ \\ \hline
+		2 & $h\leq t$ &$3\cdot t-3\cdot h+26$ \\ \hline
+		3 & $h\leq t$  &$3\cdot t-3\cdot h-14\cdot p+32$ \\ \hline
+		4 & $h\leq t\land p=1$ &$3\cdot t-3\cdot h+17$ \\ \hline
+		5 & $h\leq t+10$&$3\cdot t-3\cdot h+31$ \\ \hline
+		6 & $t<h$ &$-1$ \\ \hline
+	\end{tabular}
+\end{table}
 
-\paragraph{Quantitative analysis} We aim to calculate the boundary $N$, so that the probabilistic program concentrates on termination before $N$ steps. That is, the probability of termination after $N$ steps shows an exponential decrement. We focus on the approximation of the expected termination time, cf. steps 7 to 8 in Algorithm \ref{TA}. According to the previous steps, we can find the coefficients of the polynomial template. If we know the initial values of variables, we can see that the value at the first location is $g(\ell, x_0)$, the value is $K$ at the terminated location $\ell_\bot$ and the difference between two consecutive locations is $\epsilon$. For our tool TAP, the value of $K$ is set to be $-1$ and the value of $\epsilon$ is $1$. Therefore, when program $P$ is almost sure terminating, we can get the upper bound on termination time for the given initial condition is: $ET(P) \leq UB(P) = \frac{g(\ell, x_0)-K}{\epsilon}$.  Exponential sum is one of the most commonly used specific function families in nonlinear approximation theory. Our main idea is based on martingale inequality of Azuma's Inequality, Hoeffding's Inequality and Bernstein's Inequality. In probability theory, the Azuma's inequality gives a concentration result for the values of martingales that have bounded differences. Hoeffding's Inequality~\cite{Hoeffding1963} is a special case of Azuma's Inequality. It proposes an upper bound on the probability that the sum of random variables deviates from its expected value. Bernstein's Inequality is a generalization of Hoeffding. It can handle not only independent variables but also weak independent variables. By \cite{cha2015algorithmic}, we know that when $\epsilon(N-1) > g(\ell_0,\boldsymbol{x_0})$, the inequality $\mathbb{P}(\bm{T_p} > N)\leq e^{-\frac{2((N-1)-g(\ell_0,x_0))^2}{(N-1)(b-a)^2}}$ holds. Given the exponent, we can obtain the result of $N$.
+The "Label" column represents control location of the program. The "Invariant" column is the logical formula that the reachable value on the label satisfies when it starts from the starting location. The "The RSM-map g" column denotes the ranking supermartingale on the label. The value of the RSM decreases in expectation by at least a positive amount $\epsilon$ after each execution of a statement. For example, it's easy to know that the label has less supermartingale than the previous label by 1 from label 1 to label 2. Consider the label 2 to label 3, $g(\ell_2,h,t,0)-g(\ell_3,h,t,\mathbb{E}(Binomial(1,0.5)))$, where $\mathbb{E}(Binomial(1,0.5))=0.5$, meet the above condition. Similarly, from label 3 to label 4, $g(\ell_3,h,t,\mathbb{E}(Binomial(1,0.5)))-g(\ell_4,h,t,1)=1$; from lable 3 to label 5, $g(\ell_3,h,t,0)-g(\ell_5,h,t,0)=1$; from label 4 to label 5,  $g(\ell_4,h,t,0)-g(\ell_5,\mathbb{E}_r(h+r),t,0)=1$, where $r=unifInt(0,10)$ and from label 5 to label 1, $g(\ell_5,h,t,p) -g(\ell_1,h,t+1,p)=1$, they are also satisfied. At program exit, we have from the invariant $h\leq t+9$ that $g(\ell_1,h,t,0)-g(\ell_6,h,t,p)\geq 1$ which satisfy the condition.
+
+\paragraph{Quantitative analysis} We aim to estimate the upper bound of expected termination time and calculate the boundary $N$, so that the probabilistic program concentrates on termination before $N$ steps. 
+We focus on the approximation of the expected termination time, cf. steps 6 to 8 in Algorithm \ref{TA}. According to the previous steps, we can find the coefficients of the polynomial template RSM. The existence of an RSM ensures a finite upper bound on the expected termination time. If we know the initial values of variables, we can see that the value at the first location is $g(\ell, x_0)$, the value is $K$ at the terminated location $\ell_\bot$ and the difference between two consecutive locations is $\epsilon$.  Therefore, when program $P$ is almost sure terminating, we can get the upper bound on termination time for the given initial condition is: $ET(P) \leq UB(P) = \frac{g(\ell, x_0)-K}{\epsilon}$. 
+Then we focus on concentration problem, that is, the probability of termination after $N$ steps shows an exponential decrement. Exponential sum is one of the most commonly used specific function families in nonlinear approximation theory. Our main idea is based on martingale inequality of Azuma's Inequality~\cite{Azuma1967}, Hoeffding's Inequality~\cite{Hoeffding1963,McDiarmid1998Concentration}  and Bernstein's Inequality~\cite{Bennett1962,McDiarmid1998Concentration}. In probability theory, the Azuma's inequality gives a concentration result for the values of martingales that have bounded differences. Hoeffding's Inequality is a special case of Azuma's Inequality. It proposes an upper bound on the probability that the sum of random variables deviates from its expected value. Bernstein's Inequality is a generalization of Hoeffding. It can handle not only independent variables but also weak independent variables. By \cite{cha2015algorithmic}, we know that if $\epsilon(N-1) > g(\ell_0,\boldsymbol{x_0})$, the inequality $\mathbb{P}(\bm{T_p} > N)\leq e^{-\frac{2((N-1)-g(\ell_0,x_0))^2}{(N-1)(b-a)^2}}$ holds. 
+%Given the exponent, we can obtain the result of $N$.
+Consider again Example 1 with the initial values t=30 and h=5. We can get the $ET(P) \leq \frac{3\cdot 30-3\cdot 5+27-K}{\epsilon}=103$, where K,$\epsilon$ taken to be resp. -1,1. The difference-bounded exists, is [-28,14]. Suppose we ask $\mathbb{P}(\bm{T_p} > N)\leq 10^{-3}$, we get N approximately 6296.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{img/interface}
+	\caption{TAP User Interface}
+	\label{interface}
+\end{figure}
+
+The user interface is shown in the Fig.\ref{interface}. The concentration termination time can be set on the upper left of the interface and the probabilistic programs can be written on the right. You can also choose ``File" -> ``Open" to import file. Then click ``Termination Analysis" in the ``Run" drop-down menu to run. The analysis results are displayed in the console. 
 
 
 \section{Estimating the probabilities of assertions}
-The goal of this section is to estimate the probability that a given assertion is correct at the exit of the program. There are two main steps.
-
-
-The first step is to generate a sufficient and appropriate path set $S$ with high confidence coverage. The finite set $S=\{s_1,\dots,s_i,\dots,s_n\}$ contains distinct paths that are terminating, that is, we have the transition sequences $s_i: \ell_0 \to \dots \to \ell_k \to \dots \to \ell_{\bot}$. The control flow of loop statements on program variables and sampling variables may lead to infinitely many states. Therefore, we adopt the method of simulating symbolic executions. Execution paths can be represented using a tree. Through a symbolic execution~\cite{Geldenhuys2012symbolic}, we traverse the program execution tree and collect the semantic states, so that each path of the program execution is based on the original probability distribution. In this way, our method is able to handle the problem that program $P$ contains program variables and sampling variables with a wide range of distributions or even infinitely many states. Then we need to improve the coverage $c$ of path set $S$ to all paths in a finite amount of time. Estimating the probability of a given assertion $\varphi$ on path set $S$ can be considered approximately as on the whole program. Our implementation is based on \cite{Sankaranarayanan2013Static} where it is shown that the coverage $c$ can be considered to be at least $95\%$ with $99\%$ confidence, when no new path is generated in $90$ consecutive iterations.
-
-
-The second step is to estimate the probability of a given assertion $\varphi$. For the path set $S$ collected above, we can analyze each path in turn, then estimate the path probability and eventually the assertion probability. Since the calculation of the accurate probabilities is closely related to the volume of $n$-dimensional convex polyhedron, when the dimension increases, the calculation becomes very difficult and the time complexity is high~\cite{Arora1998Proof}. Usually, the computation may fail due to the calculation or insufficient memory. On the premise of weighing the efficiency and accuracy of calculation, we focus on calculating the probability interval of a given assertion rather than the estimated value.
-
-\begin{algorithm}
-	\caption{mcBoundProbability}
-	\label{mcBoundProbability}
-	\begin{algorithmic}[1]
-		\REQUIRE Polytop p=(vars, constraints), maxDepth
-		\ENSURE Probability interval $[p_1, p_2]$
-		\IF{$isABox() || maxDepth<=0$}
-			\STATE $[p1,p2]+=computeBoundingProbability()$;
-		\ENDIF  \\
-		$//$ If at least two (or more) non trivial clusters remain, then perform the
-		decomposition.  
-		\IF{$isDecomposable(p)$}
-			\STATE dim = $selectBranchDimension()$;
-			\STATE branches= $branchAndBound(dim, nBranch)$;
-			\FOR{$b$ in branches}
-			\STATE $mcBoundProbability(b, maxDepth-1)$;
-			\ENDFOR
-		\ENDIF
-	\end{algorithmic}
-\end{algorithm}
-
-\paragraph{Path probability} Each path has a series of variables and constraints. We need to estimate the probability of satisfying all constraints given the probability distributions on variables. Each variable can be regarded as a dimension of convex polyhedron. The calculation of path probability can be reduced to a polyhedron solving problem~\cite{Visser2012Green}. However, the solution of a convex polyhedron by linear programming is too rough. Therefore, we first decompose the convex polyhedron into several non-intersecting convex bodies~\cite{Bingsheng2020} and then add up the calculation results. As described in Algorithm~\ref{mcBoundProbability}, the function $isDecomposable()$  is used to determine whether it can be decomposed. If true, it will be decomposed along the selected dimension. When the boundary box is found, the upper and lower bounds will be calculated by the function $computeBoundingProbability()$. Based on the idea of importance sampling, the function $selectBranchDimension()$ selects a dimension which is unbounded or half bound or else it selects the maximum width dimension. The function $branchAndBound()$ performs the decomposition according to the selected dimension. Here, $nBranch$ is the number of segmentation, with the default value $2$. In addition, to avoid infinite decomposition, we set $maxDepth$ as the maximum recurrence depth, with the default value $12$ in TAP. Each path is calculated by the Algorithm \ref{mcBoundProbability}. Since there is no intersection of each path, the path probability is equal to the sum of each paths' probability. Let us assume that the assertion probability is $[p_1,p_2]$. It indicates that the maximum $1-p_1$ path has not been explored. This will be used to calculate the upper bound of the assertion probability.
+The goal of this section is to estimate the probability that a given assertion is correct at the exit of the program. The specific algorithm can refer to~\cite{Sankaranarayanan2013Static}. There are two main steps.
 
 \begin{table*}[htb]
 	\caption{Experimental results: termination analysis}  
@@ -289,26 +310,27 @@ The second step is to estimate the probability of a given assertion $\varphi$. F
 	\begin{center}  
 		\begin{tabular}{|l|l|l|l|l|}  
 			\hline  	
-			Example & $x_0$ & g($\ell_0,x_0$) & UB(P) & N\\ \hline  	
-			Simple & $x=100$  & $6x+2$ & 603 & 2670 \\ \hline  		
-			NestedLoop & $x=1$ & $1040x+2290$ & 1251 & 382807 \\  \hline  
-			Award & bonus=0 & -4.0$\cdot$bonus+442& 443 &10658 \\  \hline  
-			RandomWalk & $position=0$ & -20$\cdot$position+122 & 123 & 11937 \\  \hline  
-			Gambler& $money=3$ & 400$\cdot$money+402& 1603 & 3641131 \\ \hline  		 
-			Gambler2 & $money=10$ & 45.454545$\cdot$money+456.545455 & 913 & 3134301 \\  \hline  
-			Bitcoin mining & $coin=10$ & 5.317601$\cdot$coin+2 & 57 & 1.532647E8 \\  \hline 
-			Infection & $x=1000$, $p_1$=0.25, $p_2$=0.1, $q=0.3$ & $21.107713+0.038215x+6.6E-5x^2$& 59 & 215 \\  \hline  
+			Example & $x_0$ & g($\ell_0,x_0$) & UB(P) & N (time$\leq$0.01 sec)\\ \hline  	
+			Simple & $x=100$  & $6x$ & 601 & 1474.82 \\ \hline  		
+			NestedLoop & $x=1$ & $-1040x+2288$ & 1249 & 158141.27 \\  \hline  
+			Award & bonus=0 & -4.0$\cdot$bonus+440& 441 &4522.28 \\  \hline  
+			RandomWalk & $position=0$ & -20$\cdot$position+120 & 121 & 4695.66 \\  \hline  
+			Gambler& $money=3$ & 400$\cdot$money+400& 1601 & 1506477.30 \\ \hline  		 
+			Gambler2 & $money=10$ & 45.454545$\cdot$money+454.545455 & 910.09 & 1297006.47 \\  \hline  
+			Bitcoin mining & $coin=10$ & 5.317601$\cdot$coin & 54.18 & 1.532647E8 \\  \hline 
+			Tortoise-Hare & $h=5$, $t=30$ & 3$\cdot$t-3$\cdot$h+27 & 103 & 4264.27 \\  \hline  
 		\end{tabular}  
 	\end{center}  
 \end{table*}
 
-\paragraph{Assertion probability} The method of computing an assertion probability is similar to that of computing a path probability. The only difference is the need to add assertion $\varphi$ to the conditional constraints. Let us assume that the assertion probability is $[q_1,q_2]$. Since the path set $S$ may not cover all the paths in the program, we need to consider the probability of unexplored paths and add the probability beyond the path set $S$ to the upper bound of the assertion probability. Then the probability interval of the given assertion is $[q_1,q_2+(1-p_1)]$.
+The first step is to generate a sufficient and appropriate path set $S$ with high confidence coverage. Using symbolic execution~\cite{Geldenhuys2012symbolic}, the finite set $S=\{s_1,\dots,s_i,\dots,s_n\}$ contains distinct paths that are terminating, that is, we have the transition sequences $s_i: \ell_0 \to \dots \to \ell_k \to \dots \to \ell_{\bot}$.The second step is to estimate the probability of a given assertion $\varphi$. For the path set S collected above, we can analyze each path in turn, then estimate the path probability and eventually the assertion probability. Since the calculation of the accurate probabilities is closely related to the volume of $n$-dimensional convex polyhedron, when the dimension increases, the calculation becomes very difficult and the time complexity is high~\cite{Arora1998Proof}. Usually, the computation may fail due to the calculation or insufficient memory. On the premise of weighing the efficiency and accuracy of calculation, we focus on calculating the probability interval of a given assertion rather than the estimated value.
 
 \section{Experimental Results}
 In this section, we present some experimental results of analyzing probabilistic programs using TAP. More details can be found at GitHub.
 
 
-We have written some simple but classical probabilistic programs with while' loops. In Table~\ref{TerminationResult}, we display the experimental results about termination analysis, where $x_0$ means the initial value of each variable, $g(\ell_0,x_0)$ is the polynomial ranking supermartingale about the starting location, $UB(P)$ is the upper bound of expected termination time and $N$ is the bound that the probability of termination after $N$ steps shows an exponential decrement (we set the exponent to  $1.5 \cdot 10^{-5}$).
+We have written some simple but classical probabilistic programs with `while' loops. In Table~\ref{TerminationResult}, we display the experimental results about termination analysis, where $x_0$ means the initial value of each variable, $g(\ell_0,x_0)$ is the polynomial ranking supermartingale about the starting location, $UB(P)$ is the upper bound of expected termination time and $N$ is the bound that the probability of termination after $N$ steps shows an exponential decrement (we set the exponent to  $0.01$).
+
 
 \begin{table}[htb]
 	\caption{Experimental results: estimating the probability interval of assertions}
@@ -316,6 +338,7 @@ We have written some simple but classical probabilistic programs with while' loo
 	\begin{tabular}{c |c |c |c }
 		\hline  
 		Ex. & Assertion &  $c$ & Bounds \\ \hline
+		\iffalse
 		\multirow{2}{*}{carton}
 		& count$\geq$5 & 0.9485 & [0.948540, 1] \\ \cline{2-4}
 		& count$\geq$10 & 0.9539, & [0.000639, 0.046711] \\ \cline{2-4}
@@ -329,24 +352,36 @@ We have written some simple but classical probabilistic programs with while' loo
 		& points$\geq$10 & 0.9636 & [0.137343, 0.173695] \\ \cline{2-4}
 		& pointsErr-points$\geq$5 & 0.9365 & [0.778149, 0.849318]  \\ \cline{2-4}
 		& points-pointsErr$\geq$5 & 0.9326 & [0.177619, 0.246763]  \\ \hline
-		\multirow{5}{*}{\makecell[c]{sum-\\three}}
+		\fi
+		\multirow{2}{*}{\makecell[c]{sum-\\three}}
+		& $x>5 \ \&\& \ y>0$ & 0.9886 & [0.150535, 0.163590]  \\ \cline{2-4}
+		&  \makecell[c]{$x>0 \ \&\&\ y>0$ \\ $\&\& \ z>0$} & 0.9886 & [0.125582, 0.137293] \\ \hline
+		\iffalse
 		& $x+y>z+10$ & 0.9886 & [0.447672, 0.470723] \\ \cline{2-4}
 		& $x+y+z>8$ & 0.9886 & [0.454482, 0.475890] \\ \cline{2-4}
 		& $x+y+z>100$ & 0.9886 & [0.012422, 0.025870]  \\ \cline{2-4}
-		& $x>5 \ \&\& \ y>0$ & 0.9886 & [0.150535, 0.163590]  \\ \cline{2-4}
-		&  \makecell[c]{$x>0 \ \&\&\ y>0$ \\ $\&\& \ z>0$} & 0.9886 & [0.125582, 0.137293] \\ \hline
 		\multirow{1}{*}{ckd-epi}
 		& $f -f_1\geq0.1$ & 0.9252 & [0.351632, 0.426397] \\ \cline{2-4}
 		& $f_1 -f\geq0.1$ & 0.9261 & [0.387275, 0.461157]  \\ \hline
+		\fi
 	\end{tabular}  
 \end{table}
 
-Table~\ref{AssertionsResults} shows the experimental results about estimating the probability interval of assertions. In the table, an assertion is a boolean expression that can contain addition and subtraction operations and  also supports the use of the logical operator conjunction; $c$ is the lower bound of path coverage; the column headed by Bounds gives the upper and lower bounds of the given assertion. %Due to layout restrictions, some values are not presented in the table, such as the total number of execution paths and unique paths.
+The result of estimating the probability interval of assertions is consistent with paper~\cite{Sankaranarayanan2013Static}, so we won't repeat it here. A little difference lies in the syntax rules of assertions. We support logical operator conjunction ``\&\&" in TAP. It can analyze situations where two or more conditions are met at the same time, as shown in Table~\ref{AssertionsResults}. In the table, an assertion is a boolean expression; $c$ is the lower bound of path coverage; the column headed by Bounds gives the upper and lower bounds of the given assertion.%Due to layout restrictions, some values are not presented in the table, such as the total number of execution paths and unique paths.
 
-\include{relatedworks}
+\section{Related Tools}
+Sofware tools for the analysis of probabilistic programs has not yet received much attention. 
+As far as we know, the only existing tools are ProbFuzz~\cite{DBLP:conf/sigsoft/DuttaLHM18}, PSense~\cite{DBLP:conf/atva/HuangWM18} and PSI~\cite{DBLP:conf/cav/GehrMV16}.
+PSI is a symbolic inference tool that approximates the probability density function represented by a probabilistic program. 
+PSense is an automated verification tool that generate tight upper bounds for the sensitivity of probabilistic programs over initial inputs.
+ProbFuzz is a tool for testing probabilistic programs. 
+Both the aforementioned tools do not consider termination analysis of probabilistic programs. 
+For example, ProbFuzz focuses on testing rather than verification of probabilistic programs, 
+PSI considers only inference and PSense solves sensitivity instead. 
+Moreover, PSI/PSense requires that the input probabilistic while loop has a bounded number of loop iterations, while we can handle probabilistic loops with an unbounded number of loop iterations.
 
 \section{Conclusions and Future Work}
-Uncertainty exists in many software systems, including data analysis, stochastic algorithms and Monte Carlo simulation. We have designed TAP  to provide convenience and support for analyzing probabilistic programs.
+Uncertainty exists in many software systems, including data analysis, stochastic algorithms and Monte Carlo simulation~\cite{HASTINGS1970Monte}. We have designed TAP  to provide convenience and support for analyzing probabilistic programs.
 TAP is helpful to perform qualitative and quantitative analysis on the termination of probabilistic programs. It can also collect path sets with high confidence coverage and compute  probability interval for assertions to hold in probabilistic programs.
 
 
@@ -354,7 +389,7 @@ However, we have only solved some aspects of the complex problem of probabilisti
 \begin{enumerate}
 	\item Currently, TAP only deals with linear programs. That is, it cannot handle variable multiplication, division and exponents, etc., regardless of the termination analysis or the estimation of assertion probability interval.
 	\item Non-deterministic probabilistic programs  are also not supported. TAP requires the the behavior of the input program to be fully probabilistic, and there is no non-deterministic transitions. 
-	\item In the future, we hope to find a better way to compute more accurate probability interval under the premise of ensuring high efficiency. 
+	\item In the future, we hope to find a better way to compute more accurate termination time and probability interval under the premise of ensuring high efficiency~\cite{Hermanns2013Probabilistic}. 
 \end{enumerate}
 
 
