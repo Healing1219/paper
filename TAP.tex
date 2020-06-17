@@ -140,7 +140,7 @@ More specifically, PROPER provides the following functionalities:
     \item Reducing the termination analysis of a given program to a linear programming problem. We also consider the concentration results under the premise that the program is terminating.
 	\item Reducing the estimation of a given assertion to a polyhedron solving problem. Note that we support probabilistic programs with infinitely many states.	
 \end{enumerate}
-The tool and the experimental data given in this paper are all available in the repository \url{https://github.com/}.
+The tool and the experimental data given in this paper are all available in the repository \url{https://github.com/Healing1219/PROPER}.
 
 \section{Probabilistic Programs}
 \begin{figure}[ht]
@@ -196,7 +196,7 @@ We use control flow graphs (CFGs) to express the semantics of probabilistic prog
 	\label{example1}
 \end{figure}
 
-\paragraph{Example 1} In Figure~\ref{example1}, we show a probabilistic program on the left and its control flow graph on the right. In the program,  t is a program variable,  p and h are smapling variables. Here, two probability distributions are used: 'Binomial(1,0.5)' represents a binomial distribution, which yields values 0 and 1 with equal chance; 'unifInt(0,1)' represents an integer uniform distribution, which yields the integers between 0 and 10  with equal probability. The numbers 1-6 on the left are the program control locations, where 1 is the starting location and 6 is the terminal location. The probabilistic program simulates a scene of the tortoise hare race. The tortoise's initial position is t and the hare's initial position is h.  The tortoise  always moves at the speed of 1. With probability 0.5, the hare increases its speed by a random number between 0 and 10. The program terminates when the hare passes the tortoise.
+\paragraph{Example 1} In Figure~\ref{example1}, we show a probabilistic program on the left and its control flow graph on the right. In the program,  t is a program variable,  p and h are smapling variables. Here, two probability distributions are used: `Binomial(1,0.5)' represents a binomial distribution, which yields values 0 and 1 with equal chance; `unifInt(0,1)' represents an integer uniform distribution, which yields the integers between 0 and 10  with equal probability. The numbers 1-6 on the left are the program control locations, where 1 is the starting location and 6 is the terminal location. The probabilistic program simulates a scene of the tortoise hare race. The tortoise's initial position is t and the hare's initial position is h.  The tortoise  always moves at the speed of 1. With probability 0.5, the hare increases its speed by a random number between 0 and 10. The program terminates when the hare passes the tortoise.
 
 \iffalse
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
@@ -313,12 +313,12 @@ The goal of this section is to estimate the probability that a given assertion i
 			\hline  	
 			Example & $x_0$ & g($\ell_0,x_0$) & UB(P) & N (time$\leq$0.01 sec)\\ \hline  	
 			Simple & $x=100$  & $6x$ & 601 & 1474.82 \\ \hline  		
-			NestedLoop & $x=1$ & $-1040x+2288$ & 1249 & 158141.27 \\  \hline  
+			NestedLoop & $x=1, m=2$ & $1040\cdot m-1040\cdot x+208$ & 1249 & 158141.27 \\  \hline  
 			Award & bonus=0 & -4.0$\cdot$bonus+440& 441 &4522.28 \\  \hline  
 			RandomWalk & $position=0$ & -20$\cdot$position+120 & 121 & 4695.66 \\  \hline  
 			Gambler& $money=3$ & 400$\cdot$money+400& 1601 & 1506477.30 \\ \hline  		 
 			Gambler2 & $money=10$ & 45.454545$\cdot$money+454.545455 & 910.09 & 1297006.47 \\  \hline  
-			Bitcoin mining & $coin=10$ & 5.317601$\cdot$coin & 54.18 & 1.532647E8 \\  \hline 
+			Bitcoin mining & $coin=10$ & 5.317601$\cdot$coin & 54.18 & 6.387839E7 \\  \hline 
 			Tortoise-Hare & $h=5$, $t=30$ & 3$\cdot$t-3$\cdot$h+27 & 103 & 4264.27 \\  \hline  
 		\end{tabular}  
 	\end{center}  
@@ -346,6 +346,7 @@ We have written some simple but classical probabilistic programs with `while' lo
 		& count$\leq$7 & 0.9549 & [0.918762, 0.963832] \\ \cline{2-4}
 		& totalWeight$\geq$5.5 & 0.9386 & [0.382145, 0.453010] \\ \cline{2-4}
 		& totalWeight$\geq$6 & 0.9428 & [0.246186, 0.342997]  \\ \hline
+		\fi
 		\multirow{2}{*}{herman}
 		& count$\geq$1 & 0.9561 & [0.581128, 0.625000] \\ \cline{2-4}
 		& count$\geq$20 & 0.9701 & [0.000000, 0.029876]  \\ \hline
@@ -353,22 +354,20 @@ We have written some simple but classical probabilistic programs with `while' lo
 		& points$\geq$10 & 0.9636 & [0.137343, 0.173695] \\ \cline{2-4}
 		& pointsErr-points$\geq$5 & 0.9365 & [0.778149, 0.849318]  \\ \cline{2-4}
 		& points-pointsErr$\geq$5 & 0.9326 & [0.177619, 0.246763]  \\ \hline
-		\fi
-		\multirow{2}{*}{\makecell[c]{sum-\\three}}
+		\multirow{5}{*}{\makecell[c]{sum-\\three}}
 		& $x>5 \ \&\& \ y>0$ & 0.9886 & [0.150535, 0.163590]  \\ \cline{2-4}
-		&  \makecell[c]{$x>0 \ \&\&\ y>0$ \\ $\&\& \ z>0$} & 0.9886 & [0.125582, 0.137293] \\ \hline
-		\iffalse
+		&  \makecell[c]{$x>0 \ \&\&\ y>0$ \\ $\&\& \ z>0$} & 0.9886 & [0.125582, 0.137293] \\ \cline{2-4}
 		& $x+y>z+10$ & 0.9886 & [0.447672, 0.470723] \\ \cline{2-4}
 		& $x+y+z>8$ & 0.9886 & [0.454482, 0.475890] \\ \cline{2-4}
-		& $x+y+z>100$ & 0.9886 & [0.012422, 0.025870]  \\ \cline{2-4}
-		\multirow{1}{*}{ckd-epi}
+		& $x+y+z>100$ & 0.9886 & [0.012422, 0.025870]  \\ \hline
+		\multirow{2}{*}{ckd-epi}
 		& $f -f_1\geq0.1$ & 0.9252 & [0.351632, 0.426397] \\ \cline{2-4}
 		& $f_1 -f\geq0.1$ & 0.9261 & [0.387275, 0.461157]  \\ \hline
-		\fi
+		
 	\end{tabular}  
 \end{table}
 
-The result of estimating the probability interval of assertions is consistent with paper~\cite{Sankaranarayanan2013Static}, so we won't repeat it here. A little difference lies in the syntax rules of assertions. We support logical operator conjunction ``\&\&" in PROPER. It can analyze situations where two or more conditions are met at the same time, as shown in Table~\ref{AssertionsResults}. In the table, an assertion is a boolean expression; $c$ is the lower bound of path coverage; the column headed by Bounds gives the upper and lower bounds of the given assertion.%Due to layout restrictions, some values are not presented in the table, such as the total number of execution paths and unique paths.
+The result of estimating the probability interval of assertions is consistent with paper~\cite{Sankaranarayanan2013Static}, as shown in Table~\ref{AssertionsResults}. A little difference lies in the syntax rules of assertions. We support logical operator conjunction ``\&\&" in PROPER. It can analyze situations where two or more conditions are met at the same time. In the table, an assertion is a boolean expression; $c$ is the lower bound of path coverage; the column headed by Bounds gives the upper and lower bounds of the given assertion.%Due to layout restrictions, some values are not presented in the table, such as the total number of execution paths and unique paths.
 
 \section{Related Tools}
 Sofware tools for the analysis of probabilistic programs has not yet received much attention. 
