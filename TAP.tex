@@ -1,7 +1,7 @@
 \documentclass[sigconf,review, anonymous]{acmart}
 \acmConference[ESEC/FSE 2020]{The 28th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering}{8 - 13 November, 2020}{Sacramento, California, United States}
 %
-\usepackage{booktabs,algorithm,algorithmic,multirow,amsmath,xcolor,bm,makecell,balance} % For formal tables
+\usepackage{booktabs,algorithm,algorithmic,multirow,amsmath,xcolor,bm,makecell,balance,graphicx} % For formal tables
 
 
 
@@ -128,7 +128,7 @@
 
 
 \section{Introduction}
-There are a large number of uncertainty problems in the real world, which require us to use prerequisite knowledge and deductive reasoning to predict the results, that is to say, to make decisions on nondeterministic problems through probabilistic reasoning. Therefore, probabilistic programs are put forward for that purpose. Probabilistic programs are a kind of logic programs with probabilistic facts. They make probabilistic reasoning models easier to build and can estimate the possibilities  for certain events to occur.
+There are a large number of uncertainty problems in the real world, which require us to use prerequisite knowledge and deductive reasoning to predict the results, that is to say, to make decisions on nondeterministic problems through probabilistic reasoning. Therefore, probabilistic programs are put forward for that purpose. Probabilistic programs are a kind of logic programs with probabilistic facts. They make probabilistic reasoning models easier to build and can estimate the possibilities of certain events to occur.
 Probabilistic programs have a wide range of applications in various fields such as business, military, scientific research and daily life. Probability is becoming more and more important in actual calculations, such as risk analysis, medical decision-making, differential privacy mechanisms, etc. The analysis of probabilistic programs has also received widespread attention in academia and industry. %Therefore, we need to learn the impact of probabilitisic variables on the program results, analyze and verify the properties of probabilistic grams, so as to ensure that the final results of the program have good reliability and stability.
 
 In the current work we present PROPER, a tool for probabilistic program verification, namely, analyzing termination and assertions for affine probabilistic programs (probabilistic programs whose all arithmetic expressions are linear).
@@ -257,7 +257,7 @@ Termination analysis is an important part of program verification. If a loop pro
 		\quad \quad case "terminal statement" :\\
 		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})=g(\ell,\boldsymbol{x})=K$.
 		\STATE By the concept of half-space, $H=g(\ell,\boldsymbol{x})-pre(\ell,\boldsymbol{x})-\epsilon$, where $\epsilon >0$ and $K \leq -\epsilon$
-		\STATE Pattern extraction. By Handelman's Theorem, $H'=\sum\limits_{i=1}^{d} a_i\cdot \mu_i$, where $\mu_i \in \mu$, $\mu=\{\prod\limits_{i=1}^{n} I_i | n\in\mathbb{N}_0 and I_1,\dots,I_n \in I\}$ and $a_i$ is a non-negative real number.
+		\STATE Pattern extraction. By Farkas' Lemma, $H'=\sum\limits_{i=1}^{d} a_i \mu_i$, where $\mu_i \in \mu$, $\mu=\{\prod\limits_{i=1}^{n} I_i | n\in\mathbb{N}_0 and I_1,\dots,I_n \in I\}$ and $a_i$ is a non-negative real number.
 		\STATE Solve linear programming. H and H' are corrsponding coefficient relations. If solvable, the program P can be terminating, otherwise return.
 		\STATE Calculate the upper bound of expected termination time according to $EP(P)\leq UB(P):=\frac{g(\ell_0,x_0)-K}{\epsilon}$
 		\STATE Calculate the difference interval $[a,b]$ satisfying the condition $a\leq g(\ell',\boldsymbol{x})-g(\ell,f(\boldsymbol{x},\boldsymbol{r}))\leq b$
@@ -266,7 +266,7 @@ Termination analysis is an important part of program verification. If a loop pro
 \end{algorithm}  
 
 
-\paragraph{Qualitative analysis} It mainly analyzes whether a probabilistic program will terminate with probability $1$. The specific idea is to calculate the martingale of each location and the value of location $\ell$' minus the value of location $\ell$ is $\epsilon$, where $\epsilon$ is greater than $0$. Refer to Algorithm \ref{TA} steps 1 to 5. The polynomial ranking supermartingale (RSM) is a collection of functions at each label, represented by the template $g(\ell,\cdot)$. Each function is non-negative at non-terminal program position. The invariants and pre-expectation ~\cite{Chakarov2013Martingales} are calculated by traversing the program parse tree. The pre-expectation is about the expression over the variables across a transition $\mapsto$. Then, through steps 3 and 4, H and H' can be computed. According to Handelman's theorem~\cite{Handelman1988Representing}, we know that the coefficients of H and H' match exactly. So we obtain a linear programming problem.  For the sake of simplicity, in PROPER, we take the maximal degree of the template as $2$, that is, the template $g(\ell,\cdot)$ is a quadratic equation. In addition, $\epsilon$ is taken as $1$ and K as $-1$ for our tool PROPER. Below we show the RSM of Example 1 in Table \ref{RSM}. 
+\paragraph{Qualitative analysis} It mainly analyzes whether a probabilistic program will terminate with probability $1$. The specific idea is to calculate the martingale of each location and the value of location $\ell$' minus the value of location $\ell$ is $\epsilon$, where $\epsilon$ is greater than $0$. Refer to Algorithm \ref{TA} steps 1 to 5. The polynomial ranking supermartingale (RSM) is a collection of functions at each label, represented by the template $g(\ell,\cdot)$. Each function is non-negative at non-terminal program position. So this method can not handle the distribution without lower bound, such as Gaussian distribution. The invariants and pre-expectation~\cite{Chakarov2013Martingales} are calculated by traversing the program parse tree. The pre-expectation is about the expression over the variables across a transition $\mapsto$. Then, through steps 3 and 4, H and H' can be computed. According to Farkas' Lemma~\cite{Farkas1894}, we know that the coefficients of H and H' match exactly. So we obtain a linear programming problem.  For the sake of simplicity, in PROPER, we take the maximal degree of the template as $2$, that is, the template $g(\ell,\cdot)$ is a quadratic equation. In addition, $\epsilon$ is taken as $1$ and K as $-1$ for our tool PROPER. Below we show the RSM of Example 1 in Table \ref{RSM}. 
 
 \begin{table}[htb]
 	\centering
@@ -290,7 +290,7 @@ when going from  from label 1 to label 2, the expected value of the supermarting
 
 \paragraph{Quantitative analysis} We aim to estimate the upper bound of expected termination time and calculate the bound $N$, so that the probabilistic program concentrates on termination before $N$ steps. 
 We focus on the approximation of the expected termination time, as given in steps 6 to 8 in Algorithm \ref{TA}. According to the previous steps, we can find the coefficients of the polynomial template RSM. The existence of an RSM ensures a finite upper bound on the expected termination time. If we know the initial values of variables, we can see that the value at the first location is $g(\ell, x_0)$, the value is $K$ at the terminated location $\ell_\bot$ and the difference between two consecutive locations is $\epsilon$.  Therefore, when program $P$ is almost surely terminating, we can get the upper bound on termination time for the given initial condition: $ET(P) \leq UB(P) = \frac{g(\ell, x_0)-K}{\epsilon}$. 
-Then we focus on the concentration problem, that is, the probability of termination after $N$ steps shows an exponential decrement. Exponential sum is one of the most commonly used specific function families in nonlinear approximation theory. Our main idea is based on martingale inequality of Azuma's Inequality~\cite{Azuma1967}, Hoeffding's Inequality~\cite{Hoeffding1963,McDiarmid1998Concentration}  and Bernstein's Inequality~\cite{Bennett1962,McDiarmid1998Concentration}. In probability theory, the Azuma's inequality gives a concentration result for the values of martingales that have bounded differences. Hoeffding's Inequality is a special case of Azuma's Inequality. It proposes an upper bound on the probability that the sum of random variables deviates from its expected value. Bernstein's Inequality is a generalization of Hoeffding. It can handle not only independent variables but also weak independent variables. By \cite{cha2015algorithmic}, we know that if $\epsilon(N-1) > g(\ell_0,\boldsymbol{x_0})$, the inequality $\mathbb{P}(\bm{T_p} > N)\leq e^{-\frac{2((N-1)-g(\ell_0,x_0))^2}{(N-1)(b-a)^2}}$ holds. 
+Then we focus on the concentration problem, that is, the probability of termination after $N$ steps shows an exponential decrement. Exponential sum is one of the most commonly used specific function families in nonlinear approximation theory. Our main idea is based on martingale inequality of Azuma's Inequality~\cite{Azuma1967}, Hoeffding's Inequality~\cite{Hoeffding1963,McDiarmid1998Concentration}  and Bernstein's Inequality~\cite{Bennett1962,McDiarmid1998Concentration}. In probability theory, the Azuma's inequality gives a concentration result for the values of martingales that have bounded differences. Hoeffding's Inequality is a special case of Azuma's Inequality. It proposes an upper bound on the probability that the sum of random variables deviates from its expected value. Bernstein's Inequality is a generalization of Hoeffding. It can handle not only independent variables but also weak independent variables. By Chatterjee~\emph{et al.}~\cite{cha2015algorithmic}, we know that if $\epsilon(N-1) > g(\ell_0,\boldsymbol{x_0})$, the inequality $\mathbb{P}(\bm{T_p} > N)\leq e^{-\frac{2((N-1)-g(\ell_0,x_0))^2}{(N-1)(b-a)^2}}$ holds. 
 %Given the exponent, we can obtain the result of $N$.
 Consider again Example 1 with the initial values t=30 and h=5. We have  $ET(P) \leq \frac{3\cdot 30-3\cdot 5+27-K}{\epsilon}=103$, where $K$ and $\epsilon$ are set to be -1 and 1, respectively. The difference interval exists, which is [-28,14]. Suppose we make the query $\mathbb{P}(\bm{T_p} > N)\leq 10^{-3}$, the number N can be computed to be 6296  approximately.
 
@@ -306,7 +306,7 @@ Then by clicking ``Termination Analysis" in the ``Run" drop-down menu, we start 
 
 
 \section{Estimating the probabilities of assertions}
-The goal of this section is to estimate the probability that a given assertion is correct at the exit of a program. For the specific algorithm, we refer to~\cite{Sankaranarayanan2013Static}. There are two main steps.
+The goal of this section is to estimate the probability that a given assertion is correct at the exit of a program. For the specific algorithm, we refer to~Sankaranarayanan~\emph{et al.}~\cite{Sankaranarayanan2013Static}. There are two main steps.
 
 \begin{table*}[htb]
 	\caption{Termination analysis}  
@@ -333,7 +333,7 @@ The first step is to generate a sufficient and appropriate path set $S$ with hig
 In this section, we present some experimental results of analyzing probabilistic programs using PROPER. More details can be found at GitHub.
 
 
-We have written some simple but typical probabilistic programs with `while' loops. In Table~\ref{TerminationResult}, we display the experimental results about termination analysis, where $x_0$ means the initial value of each variable, $g(\ell_0,x_0)$ is the polynomial ranking supermartingale about the starting location, $UB(P)$ is the upper bound of expected termination time and $N$ is the bound that the probability of termination after $N$ steps shows an exponential decrement (we set the exponent to  be $0.01$).
+We have written some simple but typical probabilistic programs with `while' loops. In Table~\ref{TerminationResult}, we display the experimental results about termination analysis, where $x_0$ means the initial value of each variable, $g(\ell_0,x_0)$ is the polynomial ranking supermartingale about the starting location, $UB(P)$ is the upper bound of expected termination time and $N$ is the bound that the probability of termination after $N$ steps shows an exponential decrement (we set the threshold to  be $0.01$).
 
 
 \begin{table}[htb]
@@ -349,10 +349,10 @@ We have written some simple but typical probabilistic programs with `while' loop
 		& count$\leq$7 & 0.9549 & [0.918762, 0.963832] \\ \cline{2-4}
 		& totalWeight$\geq$5.5 & 0.9386 & [0.382145, 0.453010] \\ \cline{2-4}
 		& totalWeight$\geq$6 & 0.9428 & [0.246186, 0.342997]  \\ \hline
-		\fi
 		\multirow{2}{*}{herman}
 		& $ count \geq 1$ & 0.9561 & [0.581128, 0.625000] \\ \cline{2-4}
 		& $ count \geq 20$ & 0.9701 & [0.000000, 0.029876]  \\ \hline
+		\fi
 		\multirow{3}{*}{\makecell[c]{framin\\gham}}
 		& $points \geq 10$ & 0.9636 & [0.137343, 0.173695] \\ \cline{2-4}
 		& $pointsErr-points \geq 5$ & 0.9365 & [0.778149, 0.849318]  \\ \cline{2-4}
@@ -363,14 +363,15 @@ We have written some simple but typical probabilistic programs with `while' loop
 		& $x+y>z+10$ & 0.9886 & [0.447672, 0.470723] \\ \cline{2-4}
 %		& $x+y+z>8$ & 0.9886 & [0.454482, 0.475890] \\ \cline{2-4}
 		& $x+y+z>100$ & 0.9886 & [0.012422, 0.025870]  \\ \hline
+		\iffalse
 		\multirow{2}{*}{ckd-epi}
 		& $f -f_1\geq0.1$ & 0.9252 & [0.351632, 0.426397] \\ \cline{2-4}
 		& $f_1 -f\geq0.1$ & 0.9261 & [0.387275, 0.461157]  \\ \hline
-		
+		\fi
 	\end{tabular}  
 \end{table}
 
-The results of estimating the probability intervals of assertions as shown in Table~\ref{AssertionsResults} are consistent wit those in \cite{Sankaranarayanan2013Static}. A little difference lies in the syntax of assertions. We support the conjunction operator  ``\&\&" in PROPER. It can analyze situations where two or more conditions are met at the same time. In the table, an assertion is a boolean expression; $c$ is the lower bound of path coverage; the column headed by Bounds gives the upper and lower bounds of the given assertion.%Due to layout restrictions, some values are not presented in the table, such as the total number of execution paths and unique paths.
+The results of estimating the probability intervals of assertions as shown in Table~\ref{AssertionsResults} are consistent with those in~\cite{Sankaranarayanan2013Static}. A little difference lies in the syntax of assertions. We can support the conjunction operator  ``\&\&" in PROPER that are not available before. It can analyze situations where two or more conditions are met at the same time. In the table, an assertion is a boolean expression; $c$ is the lower bound of path coverage; the column headed by Bounds gives the upper and lower bounds of the given assertion.%Due to layout restrictions, some values are not presented in the table, such as the total number of execution paths and unique paths.
 
 \section{Related Tools}
 Sofware tools for the analysis of probabilistic programs has not yet received much attention. 
@@ -392,7 +393,7 @@ However, we have only solved some aspects of the complex problem of probabilisti
 \begin{enumerate}
 	\item Currently, PROPER only deals with linear programs. That is, it cannot handle variable multiplication, division and exponents, etc., regardless of the termination analysis or the estimation of assertion probability intervals.
 	\item Non-deterministic probabilistic programs  are also not supported. PROPER requires the the behavior of the input program to be fully probabilistic, and there is no non-deterministic transitions. 
-	\item In the future, we hope to find a better way to compute accurate termination time and probability intervals under the premise of ensuring high efficiency~\cite{Hermanns2013Probabilistic}. 
+	\item In the future, we hope to find a better way to compute accurate termination time and probability intervals under the premise of ensuring high efficiency. 
 \end{enumerate}
 
 
