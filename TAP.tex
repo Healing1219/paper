@@ -151,7 +151,7 @@ The tool and the experimental data given in this paper are all available in the 
 	\begin{tabular}{rcl}
 		\hline
 		% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-		program & $:=$ & typeSpecifier main\{$stmt^*$\} \\
+		program & $:=$ & typeSpecifier main\{stmt$^*$\} \\
 		stmt & $:=$ & assign | condStmt | while \\
 		assign & $:=$ & intAssign | realAssign \\
 		condStmt & $:=$ & ifStmt | ifElseStmt\\
@@ -384,7 +384,7 @@ For example, ProbFuzz focuses on testing rather than verification of probabilist
 PSI considers only inference and PSense solves sensitivity instead. 
 Moreover, PSI/PSense requires that the input probabilistic while loop has a bounded number of loop iterations, while we can handle probabilistic loops with an unbounded number of loop iterations.
 
-\section{Conclusions and Future Work}
+\section{Conclusion and Future Work}
 Uncertainty exists in many software systems, including data analysis, stochastic algorithms and Monte Carlo simulation~\cite{HASTINGS1970Monte}. We have designed PROPER  to provide convenience and support for analyzing probabilistic programs.
 PROPER is helpful to perform qualitative and quantitative analysis on the termination of probabilistic programs. It can also collect path sets with high confidence coverage and compute  probability intervals for assertions to hold in probabilistic programs.
 
