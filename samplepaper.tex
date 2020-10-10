@@ -236,14 +236,14 @@ For termination analysis, we need invariants and pre-expectations, which we will
 \section{Termination Analysis}
 Termination analysis is an important part of program verification. If a loop program terminates for all initial values that can enter the loop, the program is said to be terminating. Ensuring termination is a necessary condition for many properties of programs such as total correctness. 
 
-Generally speaking, the termination of a program is undecideable~\cite{Turing1936On}, but for some subclasses of programs, the termination can be verified. In this paper, we prove the termination of affine probabilistic programs by synthesizing ranking supermartingales~\cite{Chakarov2013Martingales}. We first extend the traditional linear ranking supermartingale to polynomial ranking supermartingales, and verify the termination of affine probabilistic programs by synthesizing polynomial ranking supermartingales. PROPER implements Algorithm \ref{TA}~\cite{kris2016termination,cha2015algorithmic} to analyze probabilistic termination qualitatively and quantitatively.  
+Generally speaking, the termination of a program is undecidable~\cite{Turing1936On}, but for some subclasses of programs, the termination can be verified. In this paper, we prove the termination of affine probabilistic programs by synthesizing ranking supermartingales~\cite{Chakarov2013Martingales}. We first extend the traditional linear ranking supermartingale to polynomial ranking supermartingales, and verify the termination of affine probabilistic programs by synthesizing polynomial ranking supermartingales. PROPER implements Algorithm \ref{TA}~\cite{kris2016termination,cha2015algorithmic} to analyze probabilistic termination qualitatively and quantitatively.  
 
 \paragraph{Qualitative analysis} It mainly analyzes whether a probabilistic program will terminate with probability $1$ (almost sure termination).
 Let us recall the concepts of invariant, pre-expection, and polynomial ranking supermartingale.
 \begin{enumerate}
 	\item[-] An \textbf{invariant} is a function $I$ that assigns a set $I(\ell)$ on variables $X$ to each label $\ell$. Thus for all configurations $(\ell,x)$  reachable from the initial configurations $(\ell_0, x_0)$ by running the program, it will hold that $x \vDash I(\ell)$. In PROPER, we only support linear invariants, which can be represented by a finite number of linear inequalities.
 	\item[-] A \textbf{pre-expectation} is intuitively the expected value of polynomial ranking  supermartingale $g(\ell,\cdot)$ in the next step of program execution.
-	\item[-] A \textbf{polynomial ranking supermartingale}~\cite{Chakarov2013Martingales}(pRSM) is intuitively a polynomial with the maximal degree $d$ at each location. At the same location, the pre-expectation does not exceed the value of pRSM. Each function is non-negative at a non-terminal location, and the dividing line between termination and non-termination is 0.
+	\item[-] A \textbf{polynomial ranking supermartingale}~\cite{Chakarov2013Martingales} (pRSM) is intuitively a polynomial with the maximal degree $d$ at each location. At the same location, the pre-expectation does not exceed the value of pRSM. Each function is non-negative at a non-terminal location, and the dividing line between termination and non-termination is 0.
 \end{enumerate}
 
 \begin{algorithm}[htb]  
@@ -276,14 +276,14 @@ Let us recall the concepts of invariant, pre-expection, and polynomial ranking s
 
 %The basic idea is to calculate the martingale of each location and the value of location %$\ell$' minus the value of the previous location $\ell$ is $\epsilon$, \yx{this sentence %reads bad.} where $\epsilon$ is greater than $0$. 
 Let us consider Algorithm \ref{TA}. A polynomial ranking supermartingale is a collection of expressions at each location $\ell$ and $g(\ell,\cdot)$ is the template about pRSM. For the sake of simplicity, in PROPER, we take the maximal degree of the template as $2$, that is, the template $g(\ell,\cdot)$ is a quadratic equation.
-Then we need to collect invariant and calculate pre-expection by traversing the abstract syntax tree. Evidently, if $g$ is a polynomial on program variables and $\ell$ is an assignment, condition-branch or loop statement, then pre-expectation is also a polynomial. When $\ell$ is an assignment statement with the update function $f$, $\mathbb{E}(g(\ell',f(v_x,\boldsymbol{r}))$ is the expectation at location $\ell'$, where the value of $v_x$ are regarded as constants and $\boldsymbol{r}$ are observed as the probability distribution specified by the sampling variable. Each $r_i$ is a random variable following its cumulative distribution function $\gamma_{r_i}$.
-When $\ell$ is an condition-branch or loop statement, we will discuss the situation separately. When the $v_x$ satisfies $\alpha$, the indicator $\textbf{1}_{\boldsymbol{x}\vDash\alpha}$ is equal to 1, otherwise it is 0. On the contrary, $\textbf{1}_{\boldsymbol{x}\nvDash\alpha}$ is equal to 1 when $\boldsymbol{x}$ does not satisfy $\alpha$ and 0 when it does. $\ell_a$ and $\ell_b$ are the labels for \textbf{true}-branch and \textbf{false}-branch respectively. When $\ell$ at exit location,  $pre(\ell,\boldsymbol{x})$ is equal to $g(\ell,\boldsymbol{x})$, that is, the value of $pre(\ell,\boldsymbol{x})$ is $K$.
+Then we need to collect invariants and calculate pre-expection by traversing the abstract syntax tree. Evidently, if $g$ is a polynomial on program variables and $\ell$ is an assignment, condition-branch or loop statement, then the pre-expectation is also a polynomial. When $\ell$ is an assignment statement with the update function $f$, $\mathbb{E}(g(\ell',f(v_x,\boldsymbol{r}))$ is the expectation at location $\ell'$, where the value of $v_x$ is regarded as constants and $\boldsymbol{r}$ is observed as the probability distribution specified by the sampling variable. Each $r_i$ is a random variable following its cumulative distribution function $\gamma_{r_i}$.
+When $\ell$ is an condition-branch or loop statement, we will discuss the situation separately. When the $v_x$ satisfies $\alpha$, the indicator $\textbf{1}_{\boldsymbol{x}\vDash\alpha}$ is equal to 1, otherwise it is 0. On the contrary, $\textbf{1}_{\boldsymbol{x}\nvDash\alpha}$ is equal to 1 when $\boldsymbol{x}$ does not satisfy $\alpha$ and 0 when it does. $\ell_a$ and $\ell_b$ are the labels for \textbf{true}-branch and \textbf{false}-branch respectively. When $\ell$ at is at the exit location,  $pre(\ell,\boldsymbol{x})$ is equal to $g(\ell,\boldsymbol{x})$, that is, the value of $pre(\ell,\boldsymbol{x})$ is $K$.
 
 \paragraph{Example 2} 
-We consider the same program as in Example~1 with CFG in Figure~\ref{example1}. The quadratic template g is shown in the following formula, where $n=1,\ldots,5$. For terminal location $g(\ell_6,h,t)\!=\!K\!=\!-1$. 
+We consider the same program as in Example~1 with the CFG in Figure~\ref{example1}. The quadratic template g is shown in the following formula, where $n=1,\ldots,5$. For terminal location $g(\ell_6,h,t)\!=\!K\!=\!-1$. 
 $$g(\!\ell_n,h,t,p\!)\!=\!a_{n0}\!+\!a_{n1}\cdot h\!+\!a_{n2}\cdot h^{2}\!+\!a_{n3}\cdot ht \!+\!a_{n4}\cdot hp\!+\!a_{n5}\cdot t\!+\!a_{n6}\cdot t^{2}+\!a_{n7}\cdot tp\!+\!a_{n8}\cdot p\!+\!a_{n9}\cdot p^{2}$$ 
 
-Then we can calculate pre-expectation, where all the coefficients involved are linear of $a_{ni}$.\\ For the assignment statement at location $\ell_2$:
+Then we can calculate the pre-expectation, where all the coefficients involved are linear of $a_{ni}$.\\ For the assignment statement at location $\ell_2$:
 \begin{align*}
 pre(\ell_2,h,t,p)&=\mathbb{E}(g(\ell_3,h,t,p)) \\
 &= (a_{30}+0.25a_{39}+0.5a_{38})+(a_{31}+0.5a_{34})\cdot h+a_{32}\cdot h^{2}+\\&\qquad a_{33}\cdot ht+(a_{35}+0.5a_{37})\cdot t+a_{36}\cdot t^{2}  
@@ -300,19 +300,21 @@ pre(\ell_3,h,t,p)&=g(\ell_5,h,t+1,p) \\
 \end{align*}
 For the terminal location $\ell_6$, $pre(\ell_6,h,t,p)=-1$.
 
-Assuming invariant is represented by I, polyonomial ranking-supermartingale map \textit{w.r.t(P,I)} meets the following conditions.
+Assuming the invariant is represented by I, the polyonomial ranking-supermartingale map \textit{w.r.t(P,I)} meets the following conditions.
 \begin{itemize}
-	\item[-] C1: For each location $\ell$, $g(\ell,\cdot)$ is a polynomial over program variables of order at most d;
+	\item[-] C1: For each location $\ell$, $g(\ell,\cdot)$ is a polynomial over program variables of order at most $d$;
 	\item[-] C2: For non-terminal location and reachable
-	valuations $x \vDash I(\ell)$, then $g(\ell,x) \geq 0$;
+	valuations $x \vDash I(\ell)$, we have $g(\ell,x) \geq 0$;
 	\item[-] C3: For terminal location, $g(\ell,x)=K$;
 	\item[-] C4: For non-terminal location and reachable
-	valuations $x \vDash I(\ell)$, then $pre(\ell,x) \leq g(\ell,x)-\epsilon$.
+	valuations $x \vDash I(\ell)$, we have $pre(\ell,x) \leq g(\ell,x)-\epsilon$.
 \end{itemize}
-In the above formula, $\epsilon \geq 0$ and $K \leq -\epsilon$. C1 is the polynomial condition; C2 shows that the pRSM is non-negative for every non-terminal location; C3 specifes pRSM should always less then 0, so this method cannot handle distributions without lower bounds, such as Gaussian distributions; C4 is the RSM difference condition.
-We have observed that each of the universal quantization formulas described in C2, C4 can be decomposed into a conjunction. Here we are mainly through Farkas' Lemma~\cite{Farkas1894}, which believes that two convex sets can be separated by a hyperplane. Then, in Steps 3 and 4, H and H' can be computed. H is transformed by the inequality $pre(\ell,x)\leq g(\ell,x)-\varepsilon$. H' is represented according to Farkas' Lemma~\cite{Farkas1894}, we know that the coefficients of H and H' match exactly. Finally, it is transformed into a linear programming problem, and we can get unknown coefficients of template by solving linear equations. The solution of linear equations means that the probabilistic program can terminate finitely.
+In the above formula, $\epsilon \geq 0$ and $K \leq -\epsilon$. C1 is the polynomial condition; C2 shows that the pRSM is non-negative for every non-terminal location; C3 specifes pRSM should always less then 0,
+\yx{this sentence reads bad} so this method cannot handle distributions without lower bounds, such as Gaussian distributions; C4 is the RSM difference condition.
+We have observed that each of the universal quantization formulas described in C2 and C4 can be decomposed into a conjunction. Here we mainly rely on  Farkas' Lemma~\cite{Farkas1894}, which states that two convex sets can be separated by a hyperplane. Then, in Steps 3 and 4, H and H' can be computed. H is transformed by the inequality $pre(\ell,x)\leq g(\ell,x)-\varepsilon$. H' is represented according to Farkas' Lemma~\cite{Farkas1894}, and the coefficients of H and H' match exactly. Finally, it is transformed into a linear programming problem. % and we can get unknown coefficients of template by solving linear equations. 
+A solution of the linear equations ensures that the probabilistic program can terminate almost surely.
 
-\paragraph{Example 3} With the though of Example~2, the instances for termination of this program are listed as follows:
+\paragraph{Example 3} With the analysis in Example~2, we can list the instances for the termination of the program as follows:
 \begin{itemize}
 	\item[-] (C4,label 1) $(\{t-h, t-h-9\}, g(\ell_1,h,t,p)-g(\ell_2,h,t,p)-\epsilon)$
 	\item[-] (C4,label 2) $(\{t-h\}, g(\ell_2,h,t,p)-\mathbb{E}(g(\ell_3,h,t,Binomial))-\epsilon)$;
@@ -322,10 +324,10 @@ We have observed that each of the universal quantization formulas described in C
 	\item[-] (C2) $(\{h-t,h-t-9\}, g(\ell_1,h,t,p)$ and $(\{h-t\}, g(\ell_i,h,t,p)$ for $2\leq i \leq 5$.
 \end{itemize}
 
-In summary, our algorithm synthesizes polynomial ranking supermartingales according to conditions(C1-C4) to form a set of universally quantified formulas. Farkas' Lemma is the key technology.
+In summary, our algorithm synthesizes polynomial ranking supermartingales according to conditions (C1-C4) to form a set of universally quantified formulas, where Farkas' Lemma plays a key  role.
 
-\paragraph{Example 4} 
-With the though of Example~3, the coefficients of template g can be solved. Below we show the result of Example 1 in Table \ref{RSM}. 
+%\paragraph{Example 4} 
+The next step is to compute  the coefficients of template g. Below we show the result of Example 1 in Table \ref{RSM}. 
 
 \begin{table}[htb]
 	\centering
@@ -348,11 +350,11 @@ when going from from label 1 to label 2, the expected value of the supermartinga
 
 \paragraph{Quantitative analysis} We aim to estimate the upper bound of expected termination time and calculate the bound $N$, so that the probabilistic program concentrates on termination before $N$ steps. 
 
-We focus on the approximation of the expected termination time, as given in Steps 6 to 8 in Algorithm \ref{TA}. According to the previous steps, we can find the coefficients of the polynomial template pRSM. The existence of an pRSM ensures a finite upper bound on the expected termination time. If we know the initial values of variables, we can see that the value at the first location is $g(\ell, v_0)$, the value is $K$ at the terminated location $\ell_\bot$ and the difference between two consecutive locations is $\epsilon$.  Therefore, when program $P$ is almost surely terminating, we can get the upper bound on termination time for the given initial condition: $ET(P) \leq UB(P) = \frac{g(\ell, v_0)-K}{\epsilon}$. 
+We focus on the approximation of the expected termination time, as given in Steps 6 to 8 in Algorithm \ref{TA}. According to the previous steps, we can find the coefficients of the polynomial template pRSM. The existence of a pRSM ensures a finite upper bound on the expected termination time. If we know the initial values of variables, we can see that the value at the first location is $g(\ell, v_0)$, the value is $K$ at the terminated location $\ell_\bot$ and the difference between two consecutive locations is $\epsilon$.  Therefore, when program $P$ is almost surely terminating, we can get the upper bound on termination time for the given initial condition: $ET(P) \leq UB(P) = \frac{g(\ell, v_0)-K}{\epsilon}$. 
 
 Then we focus on the concentration problem, that is, the probability of termination after $N$ steps shows an exponential decrement. Exponential sum is one of the most commonly used specific function families in nonlinear approximation theory. Our main idea is based on martingale inequality of Azuma's Inequality~\cite{Azuma1967}, Hoeffding's Inequality~\cite{Hoeffding1963,McDiarmid1998Concentration}  and Bernstein's Inequality~\cite{Bennett1962,McDiarmid1998Concentration}. In probability theory, the Azuma's inequality gives a concentration result for the values of martingales that have bounded differences. Hoeffding's Inequality is a special case of Azuma's Inequality. It proposes an upper bound on the probability that the sum of random variables deviates from its expected value. Bernstein's Inequality is a generalization of Hoeffding. It can handle not only independent variables but also weak independent variables. By Chatterjee~\emph{et al.}~\cite{cha2015algorithmic}, we know that if $\epsilon(N-1) > g(\ell_0,\boldsymbol{v_0})$, the inequality $\mathbb{P}(\bm{T_p} > N)\leq e^{-\frac{2((N-1)-g(\ell_0,v_0))^2}{(N-1)(b-a)^2}}$ holds. 
 
-\paragraph{Example 5} Consider again Example 1 with the initial values t=30 and h=5. We have  $ET(P) \leq \frac{3\cdot 30-3\cdot 5+27-K}{\epsilon}=103$, where $K$ and $\epsilon$ are set to be -1 and 1, respectively. The difference interval exists, which is [-28,14]. Suppose we make the query $\mathbb{P}(\bm{T_p} > N)\leq 10^{-3}$, the number N can be computed to be 6296  approximately.
+\paragraph{Example 4} Consider again Example 1 with the initial values t=30 and h=5. We have  $ET(P) \leq \frac{3\cdot 30-3\cdot 5+27-K}{\epsilon}=103$, where $K$ and $\epsilon$ are set to be -1 and 1, respectively. The difference interval exists, which is [-28,14]. Suppose we make the query $\mathbb{P}(\bm{T_p} > N)\leq 10^{-3}$, the number N can be computed to be 6296  approximately.
 
 \section{Estimating the probabilities of assertions}
 The goal of this section is to estimate the probability that a given assertion is correct at the exit of a program. For the specific algorithm, we refer to~Sankaranarayanan~\emph{et al.}~\cite{Sankaranarayanan2013Static}. There are two main steps.
