@@ -48,7 +48,7 @@ Probabilistic programs combine probabilistic reasoning models with Turing comple
 \section{Introduction}
 In traditional precise logics, the representation and reasoning of knowledge is mechanical and deterministic, just like Laplace's demon, capable of inferring about the future based on the known facts. But in real world, there are a large number of uncertainty problems, which require us to use prerequisite knowledge and deductive reasoning to predict the results, that is to say, to make decisions on nondeterministic problems through probabilistic reasoning. Probability is an important tool for the representation of imprecise and incomplete knowledge. Therefore, probabilistic programs are put forward for that purpose. 
 
-Probabilistic programs are a kind of logic programs with probabilistic facts. Probabilistic programs are often used to build generation models and reason about its hidden process. They make probabilistic reasoning models easier to build and can estimate the possibilities of certain events to occur. They can also be used to quantify the uncertainty in the prediction instead of predicting a single value. Several practical probabilistic programming languages, such as Edward~\cite{tran2016edward}, Anglican~\cite{Dav2016Design}, WebPPL~\cite{Noah2014language} and Church~\cite{Noah2008language}, can be used to build powerful models in a wide range of applications like business, military, scientific research and daily life. %Probability is becoming more and more important in actual calculations, such as risk analysis, medical decision-making, differential privacy mechanisms, etc. 
+Probabilistic programs are a kind of logic programs with probabilistic facts. Probabilistic programs are often used to build generation models and reason about its hidden process. They make probabilistic reasoning models easier to build and can estimate the possibilities of certain events to occur. They can also be used to quantify the uncertainty in the prediction instead of predicting a single value. Several practical probabilistic programming languages, such as Edward~\cite{tran2016edward}, Anglican~\cite{Dav2016Design}, WebPPL~\cite{Noah2014language} and Church~\cite{Noah2012language}, can be used to build powerful models in a wide range of applications like business, military, scientific research and daily life. %Probability is becoming more and more important in actual calculations, such as risk analysis, medical decision-making, differential privacy mechanisms, etc. 
 With the increasing demand for high confidence software, the analysis and verification of probabilistic programs has also received widespread attention in academia and industry. 
 %Therefore, our work is a valuable and challenging, which the reliability and stability of the program can be better guaranteed. 
 In general, program verification is an undecidable problem for ordinary programs.
@@ -241,7 +241,7 @@ Generally speaking, the termination of a program is undecidable~\cite{Turing1936
 \paragraph{Qualitative analysis} It mainly analyzes whether a probabilistic program will terminate with probability $1$ (almost sure termination).
 Let us recall the concepts of invariant, pre-expection, and polynomial ranking supermartingale.
 \begin{enumerate}
-	\item[-] An \textbf{invariant} is a function $I$ that assigns a set $I(\ell)$ on variables $X$ to each label $\ell$. Thus for all configurations $(\ell,x)$  reachable from the initial configurations $(\ell_0, x_0)$ by running the program, it will hold that $x \vDash I(\ell)$. In PROPER, we only support linear invariants, which can be represented by a finite number of linear inequalities.
+	\item[-] An \textbf{invariant} is a function $I$ that assigns a set $I(\ell)$ on variables $X$ to each label $\ell$. Thus for all configurations $(\ell,v)$  reachable from the initial configurations $(\ell_0, v_0)$ by running the program, it will hold that $x \vDash I(\ell)$. In PROPER, we only support linear invariants, which can be represented by a finite number of linear inequalities.
 	\item[-] A \textbf{pre-expectation} is intuitively the expected value of polynomial ranking  supermartingale $g(\ell,\cdot)$ in the next step of program execution.
 	\item[-] A \textbf{polynomial ranking supermartingale}~\cite{Chakarov2013Martingales} (pRSM) is intuitively a polynomial with the maximal degree $d$ at each location. At the same location, the pre-expectation does not exceed the value of pRSM. Each function is non-negative at a non-terminal location, and the dividing line between termination and non-termination is 0.
 \end{enumerate}
@@ -255,17 +255,17 @@ Let us recall the concepts of invariant, pre-expection, and polynomial ranking s
 		\ENSURE  
 		Judge whether the program is terminating, isT;\\
 		The probability to terminate afer N steps decreases exponentially, N.
-		\STATE Set template $g(\ell,\boldsymbol{x})$ with a natural number as the maximal degree. Each location has the common template with unique coefficient. If $\ell_{\bot}$, the template $g(\ell,\boldsymbol{x})$=K.
+		\STATE Set template $g(\ell,\boldsymbol{v})$ with a natural number as the maximal degree. Each location has the common template with unique coefficient. If $\ell_{\bot}$, the template $g(\ell,\boldsymbol{v})$=K.
 		\STATE Traverse the programs parse tree \\
 		2.1: Collect the invariant I[ ] for each location.\\
 		2.2: Calculate the pre-expectation for each location.\\
 		\quad \quad case ``assignment statement" :\\
-		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})= \mathbb{E}(g(\ell',f(\boldsymbol{x},\boldsymbol{r}))$.\\
+		\quad \quad \quad \quad $pre(\ell,\boldsymbol{v})= \mathbb{E}(g(\ell',f(\boldsymbol{x},\boldsymbol{r}))$.\\
 		\quad \quad case ``condition(if-else) or loop(while) statement" :\\
-		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})=\textbf{1}_{\boldsymbol{x}\vDash\alpha} \cdot g(\ell_a,\boldsymbol{x})+\textbf{1}_{\boldsymbol{x}\nvDash\alpha} \cdot g(\ell_b,\boldsymbol{x})$.\\
+		\quad \quad \quad \quad $pre(\ell,\boldsymbol{v})=\textbf{1}_{\boldsymbol{v}\vDash\alpha} \cdot g(\ell_a,\boldsymbol{v})+\textbf{1}_{\boldsymbol{v}\nvDash\alpha} \cdot g(\ell_b,\boldsymbol{v})$.\\
 		\quad \quad case ``terminal statement" :\\
-		\quad \quad \quad \quad $pre(\ell,\boldsymbol{x})=g(\ell,\boldsymbol{x})=K$.
-		\STATE By the concept of half-space, $H=g(\ell,\boldsymbol{x})-pre(\ell,\boldsymbol{x})-\epsilon$, where $\epsilon >0$ and $K \leq -\epsilon$
+		\quad \quad \quad \quad $pre(\ell,\boldsymbol{v})=g(\ell,\boldsymbol{v})=K$.
+		\STATE By the concept of half-space, $H=g(\ell,\boldsymbol{v})-pre(\ell,\boldsymbol{v})-\epsilon$, where $\epsilon >0$ and $K \leq -\epsilon$
 		\STATE Pattern extraction. By Handelman's Theorem, $H'=\sum\limits_{i=1}^{d} a_i \mu_i$, where $\mu_i \in \mu$, $\mu=\{\prod\limits_{i=1}^{n} I_i | n\in\mathbb{N}_0$ and $ I_1,\dots,I_n \in I\}$ and $a_i$ is a non-negative real number.
 		\STATE Solve linear programming. H and H' are corrsponding coefficient relations. If solvable, the program P can be terminating, otherwise return.
 		\STATE Calculate the upper bound of expected termination time according to $EP(P)\leq UB(P):=\frac{g(\ell_0,v_0)-K}{\epsilon}$
@@ -277,7 +277,7 @@ Let us recall the concepts of invariant, pre-expection, and polynomial ranking s
 %The basic idea is to calculate the martingale of each location and the value of location %$\ell$' minus the value of the previous location $\ell$ is $\epsilon$, \yx{this sentence %reads bad.} where $\epsilon$ is greater than $0$. 
 Let us consider Algorithm \ref{TA}. A polynomial ranking supermartingale is a collection of expressions at each location $\ell$ and $g(\ell,\cdot)$ is the template about pRSM. For the sake of simplicity, in PROPER, we take the maximal degree of the template as $2$, that is, the template $g(\ell,\cdot)$ is a quadratic equation.
 Then we need to collect invariants and calculate pre-expection by traversing the abstract syntax tree. Evidently, if $g$ is a polynomial on program variables and $\ell$ is an assignment, condition-branch or loop statement, then the pre-expectation is also a polynomial. When $\ell$ is an assignment statement with the update function $f$, $\mathbb{E}(g(\ell',f(v_x,\boldsymbol{r}))$ is the expectation at location $\ell'$, where the value of $v_x$ is regarded as constants and $\boldsymbol{r}$ is observed as the probability distribution specified by the sampling variable. Each $r_i$ is a random variable following its cumulative distribution function $\gamma_{r_i}$.
-When $\ell$ is an condition-branch or loop statement, we will discuss the situation separately. When the $v_x$ satisfies $\alpha$, the indicator $\textbf{1}_{\boldsymbol{x}\vDash\alpha}$ is equal to 1, otherwise it is 0. On the contrary, $\textbf{1}_{\boldsymbol{x}\nvDash\alpha}$ is equal to 1 when $\boldsymbol{x}$ does not satisfy $\alpha$ and 0 when it does. $\ell_a$ and $\ell_b$ are the labels for \textbf{true}-branch and \textbf{false}-branch respectively. When $\ell$ at is at the exit location,  $pre(\ell,\boldsymbol{x})$ is equal to $g(\ell,\boldsymbol{x})$, that is, the value of $pre(\ell,\boldsymbol{x})$ is $K$.
+When $\ell$ is an condition-branch or loop statement, we will discuss the situation separately. When the $v_x$ satisfies $\alpha$, the indicator $\textbf{1}_{\boldsymbol{v}\vDash\alpha}$ is equal to 1, otherwise it is 0. On the contrary, $\textbf{1}_{\boldsymbol{v}\nvDash\alpha}$ is equal to 1 when $\boldsymbol{v}$ does not satisfy $\alpha$ and 0 when it does. $\ell_a$ and $\ell_b$ are the labels for \textbf{true}-branch and \textbf{false}-branch respectively. When $\ell$ at is at the exit location,  $pre(\ell,\boldsymbol{v})$ is equal to $g(\ell,\boldsymbol{v})$, that is, the value of $pre(\ell,\boldsymbol{v})$ is $K$.
 
 \paragraph{Example 2} 
 We consider the same program as in Example~1 with the CFG in Figure~\ref{example1}. The quadratic template g is shown in the following formula, where $n=1,\ldots,5$. For terminal location $g(\ell_6,h,t)\!=\!K\!=\!-1$. 
@@ -304,14 +304,15 @@ Assuming the invariant is represented by I, the polyonomial ranking-supermarting
 \begin{itemize}
 	\item[-] C1: For each location $\ell$, $g(\ell,\cdot)$ is a polynomial over program variables of order at most $d$;
 	\item[-] C2: For non-terminal location and reachable
-	valuations $x \vDash I(\ell)$, we have $g(\ell,x) \geq 0$;
-	\item[-] C3: For terminal location, $g(\ell,x)=K$;
+	valuations $v \vDash I(\ell)$, we have $g(\ell,v) \geq 0$;
+	\item[-] C3: For terminal location, $g(\ell,v)=K$;
 	\item[-] C4: For non-terminal location and reachable
-	valuations $x \vDash I(\ell)$, we have $pre(\ell,x) \leq g(\ell,x)-\epsilon$.
+	valuations $v \vDash I(\ell)$, we have $pre(\ell,v) \leq g(\ell,v)-\epsilon$.
 \end{itemize}
-In the above formula, $\epsilon \geq 0$ and $K \leq -\epsilon$. C1 is the polynomial condition; C2 shows that the pRSM is non-negative for every non-terminal location; C3 specifes pRSM should always less then 0,
-\yx{this sentence reads bad} so this method cannot handle distributions without lower bounds, such as Gaussian distributions; C4 is the RSM difference condition.
-We have observed that each of the universal quantization formulas described in C2 and C4 can be decomposed into a conjunction. Here we mainly rely on  Farkas' Lemma~\cite{Farkas1894}, which states that two convex sets can be separated by a hyperplane. Then, in Steps 3 and 4, H and H' can be computed. H is transformed by the inequality $pre(\ell,x)\leq g(\ell,x)-\varepsilon$. H' is represented according to Farkas' Lemma~\cite{Farkas1894}, and the coefficients of H and H' match exactly. Finally, it is transformed into a linear programming problem. % and we can get unknown coefficients of template by solving linear equations. 
+In the above formula, $\epsilon \geq 0$ and $K \leq -\epsilon$. C1 is the polynomial condition; C2 is the non-termination condition, which shows that the pRSM is non-negative for every non-terminal location; C3 is the termination condition, which specifes that pRSM should always less then 0 at terminal location;
+%\yx{this sentence reads bad} 
+C4 is the RSM difference condition. From the above four conditions, it can be seen that $g(\ell,\cdot) \geq K$, where $K$ is a lower bound, so this method cannot handle distributions without lower bounds, such as Gaussian distributions.
+We have observed that each of the universal quantization formulas described in C2 and C4 can be decomposed into a conjunction. Here we mainly rely on  Handelman's Theorem~\cite{Handelman1988}, which states that two convex sets can be separated by a hyperplane. Then, in Steps 3 and 4, H and $H'$ can be computed. H is transformed by the inequality $pre(\ell,v)\leq g(\ell,v)-\varepsilon$. $H'$ is represented according to Handelman's Theorem, and the coefficients of $H$ and $H'$ match exactly. Finally, it is transformed into a linear programming problem. % and we can get unknown coefficients of template by solving linear equations. 
 A solution of the linear equations ensures that the probabilistic program can terminate almost surely.
 
 \paragraph{Example 3} With the analysis in Example~2, we can list the instances for the termination of the program as follows:
@@ -324,7 +325,7 @@ A solution of the linear equations ensures that the probabilistic program can te
 	\item[-] (C2) $(\{h-t,h-t-9\}, g(\ell_1,h,t,p)$ and $(\{h-t\}, g(\ell_i,h,t,p)$ for $2\leq i \leq 5$.
 \end{itemize}
 
-In summary, our algorithm synthesizes polynomial ranking supermartingales according to conditions (C1-C4) to form a set of universally quantified formulas, where Farkas' Lemma plays a key  role.
+In summary, our algorithm synthesizes polynomial ranking supermartingales according to conditions (C1-C4) to form a set of universally quantified formulas, where Handelman's Theorem plays a key  role.
 
 %\paragraph{Example 4} 
 The next step is to compute  the coefficients of template g. Below we show the result of Example 1 in Table \ref{RSM}. 
@@ -346,7 +347,7 @@ The next step is to compute  the coefficients of template g. Below we show the r
 \end{table}
 
 The ``Label" column lists control locations of the program. The ``Invariant" column gives the logical formulas that the reachable labelled locations satisfy when the program is executed from the starting location. The ``The RSM-map" column denotes the ranking supermartingale on the labels. The expected value of the RSM decreases by at least a positive amount $\epsilon$ after each execution of a statement. In addition, $\epsilon$ is taken as $1$ and K as $-1$ for our tool PROPER. We can see that, 
-when going from from label 1 to label 2, the expected value of the supermartingale decreases by 1. Similarly  in the step from label 2 to label 3,  the condition is met because $p=\mathbb{E}(Binomial(1,0.5))=0.5$. And when the ``while" condition is not met, the expected value is k.
+when going from from label 1 to label 2, the expected value of the supermartingale decreases by 1. Similarly  in the step from label 2 to label 3,  the condition is met because $p=\mathbb{E}(Binomial(1,0.5))=0.5$. And when the ``while" condition is not met, the expected value is K.
 
 \paragraph{Quantitative analysis} We aim to estimate the upper bound of expected termination time and calculate the bound $N$, so that the probabilistic program concentrates on termination before $N$ steps. 
 
@@ -544,13 +545,11 @@ Admittedly, we have only solved some aspects of the complex problem of probabili
 %
 \begin{thebibliography}{8}
 \bibitem{Arora1998Proof}
-Arora, Sanjeev and Lund, Carsten and Motwani, Rajeev and Sudan, Madhu and Szegedy, Mario: Proof verification and the hardness of approximation problems. Journal of the Acm \textbf{45}(3), 501--555 (1998)
+Arora, S., Lund, C., Motwani, R., Sudan, M., Szegedy, M.: Proof verification and the hardness of approximation problems. Journal of the Acm \textbf{45}(3), 501--555 (1998)
 \bibitem{Azuma1967}
 Azuma, K.: Weighted sums of certain dependent random variables. Tohoku Mathematical Journal \textbf{19}(3), 357--367 (2010)
 \bibitem{Bennett1962}
 Bennett G.: Probability Inequalities for the Sum of Independent Random Variables. Journal of the American Statistical Association \textbf{57}(297), 33--45 (1962)
-\bibitem{Bingsheng2020}
-Bingsheng He and Feng Ma and Xiaoming Yuan: Optimally linearizing the alternating direction method of multipliers for convex programming. Computational Optimization and Applications \textbf{75}, 361--388 (2020)
 \bibitem{Chakarov2013Martingales}
 Chakarov A., Sankaranarayanan S.: Probabilistic Program Analysis with Martingales. International Conference on Computer Aided Verification Springer, Berlin, Heidelberg, (2013)
 \bibitem{kris2016termination}
@@ -558,40 +557,39 @@ Chatterjee, K., Fu, H., Goharshady, A.K.: Termination Analysis of Probabilistic 
 \bibitem{cha2015algorithmic}
 Chatterjee, K., Fu, H., Novotn\'{y}, P., Hasheminezhad, R.: Algorithmic analysis of
 qualitative and quantitative termination problems for affine probabilistic programs. In: POPL, pp. 327--342 (2016)
-\bibitem{Dav2016Design}
-David Tolpin, Jan-Willem van de Meent, Hongseok Yang, and FrankWood: Design and Implementation of Probabilistic Programming Language Anglican. In: IFL. ACM, 6:1–6:12. (2016)
 \bibitem{DBLP:conf/sigsoft/DuttaLHM18}
 Dutta S., Legunsen O., Huang Z., et al.: Testing probabilistic programming systems. the 26th ACM Joint Meeting. (2018)
-\bibitem{tran2016edward}
-Dustin Tran and Alp Kucukelbir and Adji B. Dieng and Maja Rudolph and Dawen Liang and David M. Blei: Edward: A library for probabilistic modeling, inference, and criticism. (2016) \doi{1610.09787}
-\bibitem{Farkas1894}
-Farkas J.: A fourier-f\'{e}le mechanikai elv alkalmaz\'{a}sai (Hungarian). Mathematikai\'{e}s Term\'{e}szettudom\'{a}nyi \'{E}rtesit\''{o} \textbf{12}, 457--472 (1894)
+\bibitem{Hermanns2013Probabilistic}
+Fioriti, L.M.F., Hermanns, H.: Probabilistic termination : Soundness, completeness, and compositionality. In: POPL, pp. 489--501 ACM(2015)
+\bibitem{DBLP:conf/cav/GehrMV16}
+Gehr, T., Misailovic, S., Vechev, M.: {PSI:} Exact Symbolic Inference for Probabilistic Programs. Computer Aided Verification - 28th International Conference, 62--83 (2016)
 \bibitem{Geldenhuys2012symbolic}
-J. Geldenhuys and M. B. Dwyer and W. Visser: Probabilistic symbolic execution. In: ISSTA, pp. 166--176 ACM(2012)
+Geldenhuys, J.,Dwyer M. B., Visser W.: Probabilistic symbolic execution. In: ISSTA, pp. 166--176 ACM(2012)
+\bibitem{Noah2012language}
+Goodman, N., Mansinghka, V., Roy, D., Bonawitz, K., Tarlow, D.: Church: a language for generative models. In: UAI, pp. 220--229. AUAI Press (2012)
+\bibitem{Noah2014language}
+Goodman, N., Stuhlmüller A.: The Design and Implementation of Probabilistic Programming Languages. (2014)
+\bibitem{Handelman1988}
+Handelman, D., Representing polynomials by positive linear functions on compact convex polyhedras. Pacific J. Math \textbf{132}, 35--62 (1988)
 \bibitem{HASTINGS1970Monte}
-HASTINGS and W., K.: Monte Carlo sampling methods using Markov chains and their applications. Journal of the Acm, 97--109 (1970)
+HASTINGS W.: Monte Carlo sampling methods using Markov chains and their applications. Journal of the Acm, 97--109 (1970)
+\bibitem{Bingsheng2020}
+He, B., Ma F., Yuan, X.: Optimally linearizing the alternating direction method of multipliers for convex programming. Computational Optimization and Applications \textbf{75}, 361--388 (2020)
 \bibitem{Hoeffding1963}
 Hoeffding W.: Probability Inequalities for Sums of Bounded Random Variables. Encyclopedia of Statistical Sciences. American Cancer Society (2004)
 \bibitem{DBLP:conf/atva/HuangWM18}
 Huang Z., Wang Z., Misailovic S.: PSense: Automatic Sensitivity Analysis for Probabilistic Programs. Automated Technology for Verification and Analysis - 16th International Symposium. (2018)
-\bibitem{Hermanns2013Probabilistic}
-L.M.F. Fioriti, H. Hermanns: Probabilistic termination : Soundness, completeness, and compositionality. In: POPL, pp. 489--501 ACM(2015)
 \bibitem{McDiarmid1998Concentration}
 McDiarmid C.: Concentration. In Probabilistic Methods for Algorithmic Discrete Mathematics. Algorithms in combinatorics \textbf{16}, 195--248 (1998)
-\bibitem{Noah2008language}
-Noah D Goodman, Vikash K Mansinghka, Daniel Roy, Keith Bonawitz, and Joshua B Tenenbaum: Church: a language for generative models. In: UAI, pp. 220--229. AUAI Press (2008)
-\bibitem{Noah2014language}
-Noah D Goodman and Andreas Stuhlmüller: The Design and
-Implementation of Probabilistic Programming Languages. (2014)
 \bibitem{Sankaranarayanan2013Static}
-Sankaranarayanan, Sriram and Chakarov, Aleksandar and Gulwani, Sumit.: Static Analysis for Probabilistic Programs: Inferring Whole Program Properties from Finitely Many Paths. acm sigplan notices \textbf{48}(6), 447--458 (2013)
-\bibitem{DBLP:conf/cav/2016-1}
-Swarat Chaudhuri and Azadeh Farzan. Vechev: {PSI:} Exact Symbolic Inference for Probabilistic Programs. Computer Aided Verification - 28th International Conference, 62--83 (2016)
-\bibitem{DBLP:conf/cav/GehrMV16}
-Timon Gehr and Sasa Misailovic and Martin T. Vechev: {PSI:} Exact Symbolic Inference for Probabilistic Programs. Computer Aided Verification - 28th International Conference, 62--83 (2016)
+Sankaranarayanan, S., Chakarov, A., Gulwani, S.: Static Analysis for Probabilistic Programs: Inferring Whole Program Properties from Finitely Many Paths. acm sigplan notices \textbf{48}(6), 447--458 (2013)
+\bibitem{Dav2016Design}
+Tolpin, D., Willem, V. D. M. J., Yang, H., Wood, F.: Design and Implementation of Probabilistic Programming Language Anglican. In: IFL. ACM, 6:1–6:12. (2016)
+\bibitem{tran2016edward}
+Tran, D., Kucukelbir, A., Dieng, A. B., Rudolph, M., Liang, D., Blei, D. M.: Edward: A library for probabilistic modeling, inference, and criticism. (2016) \doi{1610.09787}
 \bibitem{Turing1936On}
 Turing A.: On Computable Numbers, with an Application to the Entscheidungsproblem. Alan Turing His Work \& Impact, 13--115 (2013)
 \bibitem{Visser2012Green}
-W. Visser, J. Geldenhuys, and M. B. Dwyer: Green: reducing, reusing and recycling constraints in program analysis. In: SIGSOFT FSE, pp. 1--11 ACM(2012)
+Visser, W., Geldenhuys, J. , Dwyer, M. B.: Green: reducing, reusing and recycling constraints in program analysis. In: SIGSOFT FSE, pp. 1--11 ACM(2012)
 \end{thebibliography}
 \end{document}
