@@ -1,4 +1,4 @@
-% This is samplepaper.tex, a sample chapter demonstrating the
+ % This is samplepaper.tex, a sample chapter demonstrating the
 % LLNCS macro package for Springer Computer Science proceedings;
 % Version 2.20 of 2017/10/04
 %
@@ -38,7 +38,7 @@ Hongfei Fu\inst{2}}
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-Probabilistic programs combine probabilistic reasoning models with Turing complete programming languages, unify formal descriptions of calculation and uncertain knowledge, and can effectively deal with complex relational models and uncertain problems. In this paper, we provide a tool for analyzing termination and assertions for affine probabilistic programs, PROPER. On one hand, it can help to analyze the termination property of affine probabilistic programs both qualitatively and quantitatively. It can check whether a probabilistic program terminates with probability $1$, estimate the upper bound of expected termination time, and calculate the number of steps after which the termination probability of the given probabilistic program decreases exponentially.  On the other hand, it can estimate the correct probability interval for a given assertion to hold, which helps to analyze the influence of uncertainty of variables on the results of probabilistic programs. Our work is implemented and the effectiveness of PROPER is demonstrated through various affine probabilistic programs.
+Probabilistic programs combine probabilistic reasoning models with Turing complete programming languages, unify formal descriptions of calculation and uncertain knowledge, and can effectively deal with complex relational models and uncertain problems. In this paper, we provide a tool for analyzing termination and assertions for affine probabilistic programs, PROPER. On one hand, it can help to analyze the termination property of affine probabilistic programs both qualitatively and quantitatively. It can check whether a probabilistic program terminates with probability $1$, estimate the upper bound of expected termination time, and calculate the number of steps after which the termination probability of the given probabilistic program decreases exponentially.  On the other hand, it can estimate the correct probability interval for a given assertion to hold, which helps to analyze the influence of uncertainty of variables on the results of probabilistic programs.  PROPER is demonstrated to be effective for analyzing various affine probabilistic programs.
 
 \keywords{Probabilistic Programming  \and Program Verification \and Termination \and Ranking Supermartingale.}
 \end{abstract}
@@ -46,7 +46,7 @@ Probabilistic programs combine probabilistic reasoning models with Turing comple
 %
 %
 \section{Introduction}
-In traditional precise logics, the representation and reasoning of knowledge is mechanical and deterministic, just like Laplace's demon, capable of inferring about the future based on the known facts. But in real world, there are a large number of uncertainty problems, which require us to use prerequisite knowledge and deductive reasoning to predict the results, that is to say, to make decisions on nondeterministic problems through probabilistic reasoning. Probability is an important tool for the representation of imprecise and incomplete knowledge. Therefore, probabilistic programs are put forward for that purpose. 
+In traditional  logics, the representation and reasoning of knowledge is mechanical and deterministic, just like Laplace's demon, capable of inferring about the future based on the known facts. But in real world, there are a large number of uncertainty problems, which require us to use prerequisite knowledge and deductive reasoning to predict the results, that is to say, to make decisions on nondeterministic problems through probabilistic reasoning. Probability is an important tool for the representation of imprecise and incomplete knowledge. Therefore, probabilistic programs are put forward for that purpose. 
 
 Probabilistic programs are a kind of logic programs with probabilistic facts. Probabilistic programs are often used to build generation models and reason about its hidden process. They make probabilistic reasoning models easier to build and can estimate the possibilities of certain events to occur. They can also be used to quantify the uncertainty in the prediction instead of predicting a single value. Several practical probabilistic programming languages, such as Edward~\cite{tran2016edward}, Anglican~\cite{Dav2016Design}, WebPPL~\cite{Noah2014language} and Church~\cite{Noah2012language}, can be used to build powerful models in a wide range of applications like business, military, scientific research and daily life. %Probability is becoming more and more important in actual calculations, such as risk analysis, medical decision-making, differential privacy mechanisms, etc. 
 With the increasing demand for high confidence software, the analysis and verification of probabilistic programs has also received widespread attention in academia and industry. 
@@ -103,7 +103,7 @@ Probabilistic programs extend classical imperative programs by generating intege
 	\caption{Syntax specification of a probabilistic language}	\label{syntax}
 \end{figure}
 
-\paragraph{Syntax.} We define a probabilistic language sufficiently expressive and easy to understand according to the syntax specification shown in Figure~\ref{syntax}. The statements in the probabilistic language are similar to those in classic imperative languages, mainly composed of three types of statements: assignment, condition-branch (if-else) and loop statements (while). The main difference is that we now have a collection of random value generators (discrete distribution, Binomial distribution, Poisson distribution, Integer Uniform distribution, Real Uniform distribution, Exponential distribution, Gamma distribution, Beta distribution, Geometric distribution), which can be used to simulate different probability distributions. Variables are classified into two types: program variables $X$ and sampling variables $R$. Program variables are ordinary variables that can be assigned to integer, real, boolean variables or arithmetic expressions. Boolean variables are mainly used for condition-branch and loop statements. Sampling variables are assigned with dynamically generated values when the program is running, which is subject to a continuous or discrete probability distribution. The values may be different each time. %In addition, assertion expressions also have certain specifications. 
+\paragraph{Syntax.} We define a probabilistic language sufficiently expressive and easy to understand according to the syntax specification shown in Figure~\ref{syntax}. The statements in the probabilistic language are similar to those in classic imperative languages, mainly composed of three types of statements: assignment, condition-branch (if-else) and loop statements (while). The main difference is that we now have a collection of random value generators (discrete distribution, Binomial distribution, Poisson distribution, Integer Uniform distribution, Real Uniform distribution, Exponential distribution, Gamma distribution, Beta distribution, Geometric distribution), which can be used to simulate different probability distributions. Variables are classified into two types: program variables $X$ and sampling variables $R$. Program variables are ordinary variables that can be assigned by integer, real, boolean variables or arithmetic expressions. Boolean variables are mainly used for condition-branch and loop statements. Sampling variables are assigned with dynamically generated values when the program is running, which is subject to a continuous or discrete probability distribution. The values may be different each time. %In addition, assertion expressions also have certain specifications. 
 The format of assertions is a Boolean expression containing variables. %, which supports four fundamental rules. 
 In the case of compound assertions, we also support the logical operator ``and'' (\&\&) in assertion expressions.
 
@@ -116,7 +116,7 @@ In the case of compound assertions, we also support the logical operator ``and''
 	\item $X=\{x_0,\dots,x_n\}$ is a set of program variables and $R=\{r_1,\dots,r_m\}$ is a set of sampling variables. When the program is running, they are assigned specific values.
 	
 	\item $\mapsto$ is a transition relation. Its element is in the triple form  $(\ell,\alpha,\ell')$, where $\ell$ is the starting location and $\ell'$ is the target location of the transition, and $\alpha$ is the rule that must be observed 
-	from $\ell$ to $\ell'$. If it is an assignment statement at the starting location $\ell$, $\alpha$ is an update function $f$: $\mathbb{R}^{|X\cup R|}\to \mathbb{R}^{|X|}$. In the other case, if it is a condition-branch or loop statement is at the starting location $\ell$, $\alpha$ is a propositional polynomial predicate.
+	from $\ell$ to $\ell'$. If it is an assignment statement at the starting location $\ell$, $\alpha$ is an update function $f$: $\mathbb{R}^{X\cup R}\to \mathbb{R}^{X}$. In the other case, if it is a condition-branch or loop statement at the starting location $\ell$, $\alpha$ is a propositional polynomial predicate.
 	
 	\item $\bot$ is a sign of the exit of the program.
 \end{itemize}
@@ -126,18 +126,18 @@ We assume that a probabilistic program P has two linear sequences $X=\{x_0,\dots
 Let $(L,X,R,\mapsto,\bot)$ be the CFG associated with the probabilistic program P. For notational convenience we assume the configuration is a tuple $(\ell, v)$, where $\ell$ is a location of P and $v$ is a valuation of program variables.
 %\yx{Confusing notation; $x$ is used as a variable before, but here as a valuation.}
 We fix $(\ell_0, v_0)$ to be the initial configuration of the program P. The program updates its state according to the transition relation. The transition relation $(\ell,\alpha,\ell')$ specifies the transitions between labels together with the additional transition rules specific to different types of labels.
-According to the additional transition rules, assignment statements can be regarded as assigning $f(v_x,v_r)$ to $v_x$, where f is a update function and $V_r$ is the valuation to $R$ obtained from the sampling before the assignment statement is executed.
+According to the additional transition rules, assignment statements can be regarded as assigning $f(v_x,v_r)$ to $v_x$, where $f$ is an update function and $V_r$ is the valuation to $R$ obtained from the sampling before the assignment statement is executed.
 The execution of P is an infinite
 %\yx{Why infinite? Can P terminate in a finite number of steps?}
 sequence of configurations with each prefix in the form $(\ell_0, v_0) \dots (\ell_k, v_k)$. By convention, we assume that when a program terminates, it stays in the terminal location $\bot$ forever, so that terminating executions are also infinite. %It can express the possible behaviors of the probabilistic program by executing.
-For each $0\leq i\leq k$ in the configuration sequence $(\ell_0,v_0) \cdots (\ell_k, v_k)$, an execution enables the transition relation $(\ell_i, \alpha, \ell_{i+1})$ in $(\ell_i, v_i)$, and evaluates the random variable r so that $v_{i+1}=f(v_i,r)$. If there is a finite path starting from $(\ell_0, x_0)$ and ending with $(\ell_k, v_k)$, we can access the configuration $(\ell_k, v_k)$ from the starting configuration $(\ell_0, v_0)$. 
+For each $0\leq i\leq k$ in the configuration sequence $(\ell_0,v_0) \cdots (\ell_k, v_k)$, an execution enables the transition relation $(\ell_i, \alpha, \ell_{i+1})$ in $(\ell_i, v_i)$, and evaluates the random variable $r$ so that $v_{i+1}=f(v_i,r)$. If there is a finite path starting from $(\ell_0, x_0)$ and ending with $(\ell_k, v_k)$, we can access the configuration $(\ell_k, v_k)$ from the starting configuration $(\ell_0, v_0)$. 
 
 Suppose the current configuration is $(\ell_i, v_i)$. According to different types of statements, the transition relation of each label can be divided into the following cases. 
 \renewcommand{\labelitemi}{$\vcenter{\hbox{\tiny$\bullet$}}$}
 \begin{itemize}
 	\item  Assignment statements: $x:=exp$, where $x$ is a variable and $exp$ is a constant or arithmetic expression or function reference. According to the transition relation $(\ell, \alpha, \ell')$,
 	%\yx{The meaning of $f(x,exp)$ is obscure.} 
-	,$\alpha$ is an update function $f$: $\mathbb{R}^{|X\cup R|}\to \mathbb{R}^{|X|}$,
+	$\alpha$ is an update function $f$: $\mathbb{R}^{X\cup R}\to \mathbb{R}^{X}$,
 	the configuration of P changes into $(\ell_{i+1}, v_{i+1})$, where $v_{i+1} = f(v_i,r)$
     \item  Conditional-branch statements: $\textbf{if}$ $\phi$ $\ell_a$ $\textbf{else}$ $\ell_b$. If the value of $\phi$ is true ($v_i \models \alpha$), 
     %\yx{The relation $x_i \models f$ is undefined before} 
@@ -236,7 +236,7 @@ For termination analysis, we need invariants and pre-expectations, which we will
 \section{Termination Analysis}
 Termination analysis is an important part of program verification. If a loop program terminates for all initial values that can enter the loop, the program is said to be terminating. Ensuring termination is a necessary condition for many properties of programs such as total correctness. 
 
-Generally speaking, the termination of a program is undecidable~\cite{Turing1936On}, but for some subclasses of programs, the termination can be verified. In this paper, we prove the termination of affine probabilistic programs by synthesizing ranking supermartingales~\cite{Chakarov2013Martingales}. We first extend the traditional linear ranking supermartingale to polynomial ranking supermartingales, and verify the termination of affine probabilistic programs by synthesizing polynomial ranking supermartingales. PROPER implements Algorithm \ref{TA}~\cite{kris2016termination,cha2015algorithmic} to analyze probabilistic termination qualitatively and quantitatively.  
+Generally speaking, the termination of a program is undecidable, but for some subclasses of programs, the termination can be verified. In this paper, we prove the termination of affine probabilistic programs by synthesizing ranking supermartingales~\cite{Chakarov2013Martingales}. We first extend the traditional linear ranking supermartingale to polynomial ranking supermartingales, and verify the termination of affine probabilistic programs by synthesizing polynomial ranking supermartingales. PROPER implements Algorithm \ref{TA}~\cite{kris2016termination,cha2015algorithmic} to analyze probabilistic termination qualitatively and quantitatively.  
 
 \paragraph{Qualitative analysis} It mainly analyzes whether a probabilistic program will terminate with probability $1$ (almost sure termination).
 Let us recall the concepts of invariant, pre-expection, and polynomial ranking supermartingale.
@@ -277,13 +277,13 @@ Let us recall the concepts of invariant, pre-expection, and polynomial ranking s
 %The basic idea is to calculate the martingale of each location and the value of location %$\ell$' minus the value of the previous location $\ell$ is $\epsilon$, \yx{this sentence %reads bad.} where $\epsilon$ is greater than $0$. 
 Let us consider Algorithm \ref{TA}. A polynomial ranking supermartingale is a collection of expressions at each location $\ell$ and $g(\ell,\cdot)$ is the template about pRSM. For the sake of simplicity, in PROPER, we take the maximal degree of the template as $2$, that is, the template $g(\ell,\cdot)$ is a quadratic equation.
 Then we need to collect invariants and calculate pre-expection by traversing the abstract syntax tree. Evidently, if $g$ is a polynomial on program variables and $\ell$ is an assignment, condition-branch or loop statement, then the pre-expectation is also a polynomial. When $\ell$ is an assignment statement with the update function $f$, $\mathbb{E}(g(\ell',f(v_x,\boldsymbol{r}))$ is the expectation at location $\ell'$, where the value of $v_x$ is regarded as constants and $\boldsymbol{r}$ is observed as the probability distribution specified by the sampling variable. Each $r_i$ is a random variable following its cumulative distribution function $\gamma_{r_i}$.
-When $\ell$ is an condition-branch or loop statement, we will discuss the situation separately. When the $v_x$ satisfies $\alpha$, the indicator $\textbf{1}_{\boldsymbol{v}\vDash\alpha}$ is equal to 1, otherwise it is 0. On the contrary, $\textbf{1}_{\boldsymbol{v}\nvDash\alpha}$ is equal to 1 when $\boldsymbol{v}$ does not satisfy $\alpha$ and 0 when it does. $\ell_a$ and $\ell_b$ are the labels for \textbf{true}-branch and \textbf{false}-branch respectively. When $\ell$ at is at the exit location,  $pre(\ell,\boldsymbol{v})$ is equal to $g(\ell,\boldsymbol{v})$, that is, the value of $pre(\ell,\boldsymbol{v})$ is $K$.
+When $\ell$ is a condition-branch or loop statement, we will discuss the situation separately. When  $v_x$ satisfies $\alpha$, the indicator $\textbf{1}_{\boldsymbol{v}\vDash\alpha}$ is equal to 1, otherwise it is 0. On the contrary, $\textbf{1}_{\boldsymbol{v}\nvDash\alpha}$ is equal to 1 when $\boldsymbol{v}$ does not satisfy $\alpha$ and 0 when it does. $\ell_a$ and $\ell_b$ are the labels for \textbf{true}-branch and \textbf{false}-branch respectively. When $\ell$ is at the exit location,  $pre(\ell,\boldsymbol{v})$ is equal to $g(\ell,\boldsymbol{v})$, that is, the value of $pre(\ell,\boldsymbol{v})$ is $K$.
 
 \paragraph{Example 2} 
 We consider the same program as in Example~1 with the CFG in Figure~\ref{example1}. The quadratic template g is shown in the following formula, where $n=1,\ldots,5$. For terminal location $g(\ell_6,h,t)\!=\!K\!=\!-1$. 
-$$g(\!\ell_n,h,t,p\!)\!=\!a_{n0}\!+\!a_{n1}\cdot h\!+\!a_{n2}\cdot h^{2}\!+\!a_{n3}\cdot ht \!+\!a_{n4}\cdot hp\!+\!a_{n5}\cdot t\!+\!a_{n6}\cdot t^{2}+\!a_{n7}\cdot tp\!+\!a_{n8}\cdot p\!+\!a_{n9}\cdot p^{2}$$ 
+$$g(\!\ell_n,h,t,p\!)\!=\!a_{n_0}\!+\!a_{n_1}\cdot h\!+\!a_{n_2}\cdot h^{2}\!+\!a_{n_3}\cdot ht \!+\!a_{n_4}\cdot hp\!+\!a_{n_5}\cdot t\!+\!a_{n_6}\cdot t^{2}+\!a_{n_7}\cdot tp\!+\!a_{n_8}\cdot p\!+\!a_{n_9}\cdot p^{2}$$ 
 
-Then we can calculate the pre-expectation, where all the coefficients involved are linear of $a_{ni}$.\\ For the assignment statement at location $\ell_2$:
+Then we can calculate the pre-expectation, where all the coefficients involved are linear of $a_{n_i}$.\\ For the assignment statement at location $\ell_2$:
 \begin{align*}
 pre(\ell_2,h,t,p)&=\mathbb{E}(g(\ell_3,h,t,p)) \\
 &= (a_{30}+0.25a_{39}+0.5a_{38})+(a_{31}+0.5a_{34})\cdot h+a_{32}\cdot h^{2}+\\&\qquad a_{33}\cdot ht+(a_{35}+0.5a_{37})\cdot t+a_{36}\cdot t^{2}  
@@ -300,7 +300,7 @@ pre(\ell_3,h,t,p)&=g(\ell_5,h,t+1,p) \\
 \end{align*}
 For the terminal location $\ell_6$, $pre(\ell_6,h,t,p)=-1$.
 
-Assuming the invariant is represented by I, the polyonomial ranking-supermartingale map \textit{w.r.t(P,I)} meets the following conditions.
+Assuming the invariant is represented by I, the polyonomial ranking-supermartingale map \textit{w.r.t} (P,I) meets the following conditions.
 \begin{itemize}
 	\item[-] C1: For each location $\ell$, $g(\ell,\cdot)$ is a polynomial over program variables of order at most $d$;
 	\item[-] C2: For non-terminal location and reachable
@@ -309,7 +309,7 @@ Assuming the invariant is represented by I, the polyonomial ranking-supermarting
 	\item[-] C4: For non-terminal location and reachable
 	valuations $v \vDash I(\ell)$, we have $pre(\ell,v) \leq g(\ell,v)-\epsilon$.
 \end{itemize}
-In the above formula, $\epsilon \geq 0$ and $K \leq -\epsilon$. C1 is the polynomial condition; C2 is the non-termination condition, which shows that the pRSM is non-negative for every non-terminal location; C3 is the termination condition, which specifes that pRSM should always less then 0 at terminal location;
+In the above formula, $\epsilon \geq 0$ and $K \leq -\epsilon$. C1 is the polynomial condition; C2 is the non-termination condition, which shows that the pRSM is non-negative for every non-terminal location; C3 is the termination condition, which specifes that pRSM should always be less than 0 at terminal location;
 %\yx{this sentence reads bad} 
 C4 is the RSM difference condition. From the above four conditions, it can be seen that $g(\ell,\cdot) \geq K$, where $K$ is a lower bound, so this method cannot handle distributions without lower bounds, such as Gaussian distributions.
 We have observed that each of the universal quantization formulas described in C2 and C4 can be decomposed into a conjunction. Here we mainly rely on  Handelman's Theorem~\cite{Handelman1988}, which states that two convex sets can be separated by a hyperplane. Then, in Steps 3 and 4, H and $H'$ can be computed. H is transformed by the inequality $pre(\ell,v)\leq g(\ell,v)-\varepsilon$. $H'$ is represented according to Handelman's Theorem, and the coefficients of $H$ and $H'$ match exactly. Finally, it is transformed into a linear programming problem. % and we can get unknown coefficients of template by solving linear equations. 
@@ -317,18 +317,18 @@ A solution of the linear equations ensures that the probabilistic program can te
 
 \paragraph{Example 3} With the analysis in Example~2, we can list the instances for the termination of the program as follows:
 \begin{itemize}
-	\item[-] (C4,label 1) $(\{t-h, t-h-9\}, g(\ell_1,h,t,p)-g(\ell_2,h,t,p)-\epsilon)$
-	\item[-] (C4,label 2) $(\{t-h\}, g(\ell_2,h,t,p)-\mathbb{E}(g(\ell_3,h,t,Binomial))-\epsilon)$;
-	\item[-] (C4,label 3) $(\{t-h, p\}, g(\ell_3,h,t,p)-g(\ell_4,h,t,1)-\epsilon)$ and $(\{t-h, -p\}, g(\ell_3,h,t,p)-g(\ell_5,h,t,0)-\epsilon)$;
-	\item[-] (C4,label 4) $(\{t-h, p\},g(\ell_4,h,t,p)-\mathbb{E}(g(\ell_5,h+unifInt(0,10),t,p))-\epsilon)$;
-	\item[-] (C4,label 5) $(\{t-h\}, g(\ell_5,h,t,p)-g(\ell_1,h,t+1,p)-\epsilon)$;
+	\item[-] (C4, label 1) $(\{t-h, t-h-9\}, g(\ell_1,h,t,p)-g(\ell_2,h,t,p)-\epsilon)$
+	\item[-] (C4, label 2) $(\{t-h\}, g(\ell_2,h,t,p)-\mathbb{E}(g(\ell_3,h,t,Binomial))-\epsilon)$;
+	\item[-] (C4, label 3) $(\{t-h, p\}, g(\ell_3,h,t,p)-g(\ell_4,h,t,1)-\epsilon)$ and $(\{t-h, -p\}, g(\ell_3,h,t,p)-g(\ell_5,h,t,0)-\epsilon)$;
+	\item[-] (C4, label 4) $(\{t-h, p\},g(\ell_4,h,t,p)-\mathbb{E}(g(\ell_5,h+unifInt(0,10),t,p))-\epsilon)$;
+	\item[-] (C4, label 5) $(\{t-h\}, g(\ell_5,h,t,p)-g(\ell_1,h,t+1,p)-\epsilon)$;
 	\item[-] (C2) $(\{h-t,h-t-9\}, g(\ell_1,h,t,p)$ and $(\{h-t\}, g(\ell_i,h,t,p)$ for $2\leq i \leq 5$.
 \end{itemize}
 
 In summary, our algorithm synthesizes polynomial ranking supermartingales according to conditions (C1-C4) to form a set of universally quantified formulas, where Handelman's Theorem plays a key  role.
 
 %\paragraph{Example 4} 
-The next step is to compute  the coefficients of template g. Below we show the result of Example 1 in Table \ref{RSM}. 
+The next step is to compute  the coefficients of template $g$. Below we show the result of Example 1 in Table \ref{RSM}. 
 
 \begin{table}[htb]
 	\centering
@@ -355,7 +355,7 @@ We focus on the approximation of the expected termination time, as given in Step
 
 Then we focus on the concentration problem, that is, the probability of termination after $N$ steps shows an exponential decrement. Exponential sum is one of the most commonly used specific function families in nonlinear approximation theory. Our main idea is based on martingale inequality of Azuma's Inequality~\cite{Azuma1967}, Hoeffding's Inequality~\cite{Hoeffding1963,McDiarmid1998Concentration}  and Bernstein's Inequality~\cite{Bennett1962,McDiarmid1998Concentration}. In probability theory, the Azuma's inequality gives a concentration result for the values of martingales that have bounded differences. Hoeffding's Inequality is a special case of Azuma's Inequality. It proposes an upper bound on the probability that the sum of random variables deviates from its expected value. Bernstein's Inequality is a generalization of Hoeffding. It can handle not only independent variables but also weak independent variables. By Chatterjee~\emph{et al.}~\cite{cha2015algorithmic}, we know that if $\epsilon(N-1) > g(\ell_0,\boldsymbol{v_0})$, the inequality $\mathbb{P}(\bm{T_p} > N)\leq e^{-\frac{2((N-1)-g(\ell_0,v_0))^2}{(N-1)(b-a)^2}}$ holds. 
 
-\paragraph{Example 4} Consider again Example 1 with the initial values t=30 and h=5. We have  $ET(P) \leq \frac{3\cdot 30-3\cdot 5+27-K}{\epsilon}=103$, where $K$ and $\epsilon$ are set to be -1 and 1, respectively. The difference interval exists, which is [-28,14]. Suppose we make the query $\mathbb{P}(\bm{T_p} > N)\leq 10^{-3}$, the number N can be computed to be 6296  approximately.
+\paragraph{Example 4} Consider again Example 1 with the initial values t=30 and h=5. We have  $ET(P) \leq \frac{3\cdot 30-3\cdot 5+27-K}{\epsilon}=103$, where $K$ and $\epsilon$ are set to be -1 and 1, respectively. The difference interval exists, which is [-28,14]. Suppose we make the query $\mathbb{P}(\bm{T_p} > N)\leq 10^{-3}$, the number $N$ can be computed to be 6296  approximately.
 
 \section{Estimating the probabilities of assertions}
 The goal of this section is to estimate the probability that a given assertion is correct at the exit of a program. For the specific algorithm, we refer to~Sankaranarayanan~\emph{et al.}~\cite{Sankaranarayanan2013Static}. There are two main steps.
@@ -587,8 +587,8 @@ Sankaranarayanan, S., Chakarov, A., Gulwani, S.: Static Analysis for Probabilist
 Tolpin, D., Willem, V. D. M. J., Yang, H., Wood, F.: Design and Implementation of Probabilistic Programming Language Anglican. In: IFL. ACM, 6:1–6:12. (2016)
 \bibitem{tran2016edward}
 Tran, D., Kucukelbir, A., Dieng, A. B., Rudolph, M., Liang, D., Blei, D. M.: Edward: A library for probabilistic modeling, inference, and criticism. (2016) \doi{1610.09787}
-\bibitem{Turing1936On}
-Turing A.: On Computable Numbers, with an Application to the Entscheidungsproblem. Alan Turing His Work \& Impact, 13--115 (2013)
+%\bibitem{Turing1936On}
+%Turing A.: On Computable Numbers, with an Application to the Entscheidungsproblem. Alan Turing His Work \& Impact, 13--115 (2013)
 \bibitem{Visser2012Green}
 Visser, W., Geldenhuys, J. , Dwyer, M. B.: Green: reducing, reusing and recycling constraints in program analysis. In: SIGSOFT FSE, pp. 1--11 ACM(2012)
 \end{thebibliography}
