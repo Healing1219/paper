@@ -122,12 +122,12 @@ In the case of compound assertions, we also support the logical operator ``and''
 \end{itemize}
 
 Obviously, any probabilistic program can be transformed into a CFG naturally. Each label represents the control location in the execution of the probabilistic program, where the statement of the control location is the next program position to be executed, as show in the right diagram of Figure~\ref{example1}. 
-We assume that a probabilistic program P has two linear sequences $X=\{x_0,\dots,x_{n}\}$ and $R=\{r_0,\dots,r_{m}\}$, a valuation over variables is a function \textbf{v}: $X\cup R \to \mathbb{R}$ that assigns a value to each variable. We use $V_x$ and $V_r$ to represent the set of all valuations on $X$ and $R$, respectively. 
-Let $(L,X,R,\mapsto,\bot)$ be the CFG associated with the probabilistic program P. For notational convenience we assume the configuration is a tuple $(\ell, v)$, where $\ell$ is a location of P and $v$ is a valuation of program variables.
+We assume that a probabilistic program $P$ has two linear sequences $X=\{x_0,\dots,x_{n}\}$ and $R=\{r_0,\dots,r_{m}\}$, a valuation over variables is a function \textbf{v}: $X\cup R \to \mathbb{R}$ that assigns a value to each variable. We use $V_x$ and $V_r$ to represent the set of all valuations on $X$ and $R$, respectively. 
+Let $(L,X,R,\mapsto,\bot)$ be the CFG associated with the probabilistic program $P$. For notational convenience we assume the configuration is a tuple $(\ell, v)$, where $\ell$ is a location of $P$ and $v$ is a valuation of program variables.
 %\yx{Confusing notation; $x$ is used as a variable before, but here as a valuation.}
-We fix $(\ell_0, v_0)$ to be the initial configuration of the program P. The program updates its state according to the transition relation. The transition relation $(\ell,\alpha,\ell')$ specifies the transitions between labels together with the additional transition rules specific to different types of labels.
+We fix $(\ell_0, v_0)$ to be the initial configuration of the program $P$. The program updates its state according to the transition relation. The transition relation $(\ell,\alpha,\ell')$ specifies the transitions between labels together with the additional transition rules specific to different types of labels.
 According to the additional transition rules, assignment statements can be regarded as assigning $f(v_x,v_r)$ to $v_x$, where $f$ is an update function and $V_r$ is the valuation to $R$ obtained from the sampling before the assignment statement is executed.
-The execution of P is an infinite
+The execution of $P$ is an infinite
 %\yx{Why infinite? Can P terminate in a finite number of steps?}
 sequence of configurations with each prefix in the form $(\ell_0, v_0) \dots (\ell_k, v_k)$. By convention, we assume that when a program terminates, it stays in the terminal location $\bot$ forever, so that terminating executions are also infinite. %It can express the possible behaviors of the probabilistic program by executing.
 For each $0\leq i\leq k$ in the configuration sequence $(\ell_0,v_0) \cdots (\ell_k, v_k)$, an execution enables the transition relation $(\ell_i, \alpha, \ell_{i+1})$ in $(\ell_i, v_i)$, and evaluates the random variable $r$ so that $v_{i+1}=f(v_i,r)$. If there is a finite path starting from $(\ell_0, x_0)$ and ending with $(\ell_k, v_k)$, we can access the configuration $(\ell_k, v_k)$ from the starting configuration $(\ell_0, v_0)$. 
@@ -138,12 +138,12 @@ Suppose the current configuration is $(\ell_i, v_i)$. According to different typ
 	\item  Assignment statements: $x:=exp$, where $x$ is a variable and $exp$ is a constant or arithmetic expression or function reference. According to the transition relation $(\ell, \alpha, \ell')$,
 	%\yx{The meaning of $f(x,exp)$ is obscure.} 
 	$\alpha$ is an update function $f$: $\mathbb{R}^{X\cup R}\to \mathbb{R}^{X}$,
-	the configuration of P changes into $(\ell_{i+1}, v_{i+1})$, where $v_{i+1} = f(v_i,r)$
+	the configuration of $P$ changes into $(\ell_{i+1}, v_{i+1})$, where $v_{i+1} = f(v_i,r)$
     \item  Conditional-branch statements: $\textbf{if}$ $\phi$ $\ell_a$ $\textbf{else}$ $\ell_b$. If the value of $\phi$ is true ($v_i \models \alpha$), 
     %\yx{The relation $x_i \models f$ is undefined before} 
-    the configuration of P changes into $(\ell_a, v_a)$. Otherwise, it changes into $(\ell_b, v_b)$.
-	\item  Loop statements: $\textbf{while}$ $\phi$ $\textbf{do}$ $\ell_{i+1}$. If the value of $\phi$ is true ($v_i \models \alpha$), the configuration of P changes into $(\ell_{i+1}, v_{i+1})$. Otherwise, it changes into $(\ell_{\bot}, v_{\bot})$, where $\ell_{\bot}$ means the exit of the loop.
-	\item  Location of termination: $\ell_{i+1} =\ell_{i}=\bot$, which marks the end of P, and in this case $v_{i} = v_{i+1}$.
+    the configuration of $P$ changes into $(\ell_a, v_a)$. Otherwise, it changes into $(\ell_b, v_b)$.
+	\item  Loop statements: $\textbf{while}$ $\phi$ $\textbf{do}$ $\ell_{i+1}$. If the value of $\phi$ is true ($v_i \models \alpha$), the configuration of $P$ changes into $(\ell_{i+1}, v_{i+1})$. Otherwise, it changes into $(\ell_{\bot}, v_{\bot})$, where $\ell_{\bot}$ means the exit of the loop.
+	\item  Location of termination: $\ell_{i+1} =\ell_{i}=\bot$, which marks the end of $P$, and in this case $v_{i} = v_{i+1}$.
 \end{itemize}
 
 \begin{figure}[htbp]
@@ -251,13 +251,13 @@ Let us recall the concepts of invariant, pre-expection, and polynomial ranking s
 	\label{TA}  
 	\begin{algorithmic}[1]  
 		\REQUIRE 
-		Program P; 
+		Program $P$; 
 		\ENSURE  
 		Judge whether the program is terminating, isT;\\
-		The probability to terminate afer N steps decreases exponentially, N.
-		\STATE Set template $g(\ell,\boldsymbol{v})$ with a natural number as the maximal degree. Each location has the common template with unique coefficient. If $\ell_{\bot}$, the template $g(\ell,\boldsymbol{v})$=K.
+		The probability to terminate afer $N$ steps decreases exponentially, $N$.
+		\STATE Set template $g(\ell,\boldsymbol{v})$ with a natural number as the maximal degree. Each location has the common template with unique coefficient. If $\ell_{\bot}$, the template $g(\ell,\boldsymbol{v})$=$K$.
 		\STATE Traverse the programs parse tree \\
-		2.1: Collect the invariant I[ ] for each location.\\
+		2.1: Collect the invariant $I$ for each location.\\
 		2.2: Calculate the pre-expectation for each location.\\
 		\quad \quad case ``assignment statement" :\\
 		\quad \quad \quad \quad $pre(\ell,\boldsymbol{v})= \mathbb{E}(g(\ell',f(\boldsymbol{x},\boldsymbol{r}))$.\\
@@ -267,10 +267,10 @@ Let us recall the concepts of invariant, pre-expection, and polynomial ranking s
 		\quad \quad \quad \quad $pre(\ell,\boldsymbol{v})=g(\ell,\boldsymbol{v})=K$.
 		\STATE By the concept of half-space, $H=g(\ell,\boldsymbol{v})-pre(\ell,\boldsymbol{v})-\epsilon$, where $\epsilon >0$ and $K \leq -\epsilon$
 		\STATE Pattern extraction. By Handelman's Theorem, $H'=\sum\limits_{i=1}^{d} a_i \mu_i$, where $\mu_i \in \mu$, $\mu=\{\prod\limits_{i=1}^{n} I_i | n\in\mathbb{N}_0$ and $ I_1,\dots,I_n \in I\}$ and $a_i$ is a non-negative real number.
-		\STATE Solve linear programming. H and H' are corrsponding coefficient relations. If solvable, the program P can be terminating, otherwise return.
+		\STATE Solve linear programming. $H$ and $H'$ are corrsponding coefficient relations. If solvable, the program $P$ can be terminating, otherwise return.
 		\STATE Calculate the upper bound of expected termination time according to $EP(P)\leq UB(P):=\frac{g(\ell_0,v_0)-K}{\epsilon}$
 		\STATE Calculate the difference interval $[a,b]$ satisfying the condition $a\leq g(\ell',\boldsymbol{x})-g(\ell,f(\boldsymbol{v_x},\boldsymbol{r}))\leq b$
-		\STATE Obtain N, according to $\mathbb{P}(\bm{T_p} > N) \leq e^{-\frac{2(\epsilon(N-1)-g(\ell_0,v_0))^2}{(N-1)(b-a)^2}}$
+		\STATE Obtain $N$, according to $\mathbb{P}(\bm{T_p} > N) \leq e^{-\frac{2(\epsilon(N-1)-g(\ell_0,v_0))^2}{(N-1)(b-a)^2}}$
 	\end{algorithmic}  
 \end{algorithm} 
 
@@ -300,7 +300,7 @@ pre(\ell_3,h,t,p)&=g(\ell_5,h,t+1,p) \\
 \end{align*}
 For the terminal location $\ell_6$, $pre(\ell_6,h,t,p)=-1$.
 
-Assuming the invariant is represented by I, the polyonomial ranking-supermartingale map \textit{w.r.t} (P,I) meets the following conditions.
+Assuming the invariant is represented by $I$, the polyonomial ranking-supermartingale map \textit{w.r.t} $(P,I)$ meets the following conditions.
 \begin{itemize}
 	\item[-] C1: For each location $\ell$, $g(\ell,\cdot)$ is a polynomial over program variables of order at most $d$;
 	\item[-] C2: For non-terminal location and reachable
@@ -312,7 +312,7 @@ Assuming the invariant is represented by I, the polyonomial ranking-supermarting
 In the above formula, $\epsilon \geq 0$ and $K \leq -\epsilon$. C1 is the polynomial condition; C2 is the non-termination condition, which shows that the pRSM is non-negative for every non-terminal location; C3 is the termination condition, which specifes that pRSM should always be less than 0 at terminal location;
 %\yx{this sentence reads bad} 
 C4 is the RSM difference condition. From the above four conditions, it can be seen that $g(\ell,\cdot) \geq K$, where $K$ is a lower bound, so this method cannot handle distributions without lower bounds, such as Gaussian distributions.
-We have observed that each of the universal quantization formulas described in C2 and C4 can be decomposed into a conjunction. Here we mainly rely on  Handelman's Theorem~\cite{Handelman1988}, which states that two convex sets can be separated by a hyperplane. Then, in Steps 3 and 4, H and $H'$ can be computed. H is transformed by the inequality $pre(\ell,v)\leq g(\ell,v)-\varepsilon$. $H'$ is represented according to Handelman's Theorem, and the coefficients of $H$ and $H'$ match exactly. Finally, it is transformed into a linear programming problem. % and we can get unknown coefficients of template by solving linear equations. 
+We have observed that each of the universal quantization formulas described in C2 and C4 can be decomposed into a conjunction. Here we mainly rely on  Handelman's Theorem~\cite{Handelman1988}, which states that two convex sets can be separated by a hyperplane. Then, in Steps 3 and 4, $H$ and $H'$ can be computed. $H$ is transformed by the inequality $pre(\ell,v)\leq g(\ell,v)-\varepsilon$. $H'$ is represented according to Handelman's Theorem, and the coefficients of $H$ and $H'$ match exactly. Finally, it is transformed into a linear programming problem. % and we can get unknown coefficients of template by solving linear equations. 
 A solution of the linear equations ensures that the probabilistic program can terminate almost surely.
 
 \paragraph{Example 3} With the analysis in Example~2, we can list the instances for the termination of the program as follows:
@@ -346,8 +346,8 @@ The next step is to compute  the coefficients of template $g$. Below we show the
 	\end{tabular}
 \end{table}
 
-The ``Label" column lists control locations of the program. The ``Invariant" column gives the logical formulas that the reachable labelled locations satisfy when the program is executed from the starting location. The ``The RSM-map" column denotes the ranking supermartingale on the labels. The expected value of the RSM decreases by at least a positive amount $\epsilon$ after each execution of a statement. In addition, $\epsilon$ is taken as $1$ and K as $-1$ for our tool PROPER. We can see that, 
-when going from from label 1 to label 2, the expected value of the supermartingale decreases by 1. Similarly  in the step from label 2 to label 3,  the condition is met because $p=\mathbb{E}(Binomial(1,0.5))=0.5$. And when the ``while" condition is not met, the expected value is K.
+The ``Label" column lists control locations of the program. The ``Invariant" column gives the logical formulas that the reachable labelled locations satisfy when the program is executed from the starting location. The ``The RSM-map" column denotes the ranking supermartingale on the labels. The expected value of the RSM decreases by at least a positive amount $\epsilon$ after each execution of a statement. In addition, $\epsilon$ is taken as $1$ and $K$ as $-1$ for our tool PROPER. We can see that, 
+when going from from label 1 to label 2, the expected value of the supermartingale decreases by 1. Similarly  in the step from label 2 to label 3,  the condition is met because $p=\mathbb{E}(Binomial(1,0.5))=0.5$. And when the ``while" condition is not met, the expected value is $K$.
 
 \paragraph{Quantitative analysis} We aim to estimate the upper bound of expected termination time and calculate the bound $N$, so that the probabilistic program concentrates on termination before $N$ steps. 
 
